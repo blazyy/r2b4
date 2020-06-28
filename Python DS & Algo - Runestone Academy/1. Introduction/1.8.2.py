@@ -1,0 +1,1 @@
+print('faaez'.count('a'))
