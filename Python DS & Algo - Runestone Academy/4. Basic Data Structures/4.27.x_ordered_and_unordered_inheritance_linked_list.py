@@ -118,15 +118,6 @@ class LinkedList:
         return '[' + ', '.join(str(val) for val in lst) + ']'
     def get_size(self):
         return self.size
-    def get_index(self, ele):
-        current = self.head
-        idx = 0
-        while current:
-            if current.get_data() == ele:
-                return idx
-            idx += 1
-            current = current.get_next()
-        return -1
     def __str__(self):
         current = self.head
         lst = []
