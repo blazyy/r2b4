@@ -16,13 +16,21 @@ class Node:
         self.next = next
 
 class LinkedList:
-
     def __init__(self):
         self.head = None
         self.size = 0
+        self.end = None
 
     def is_empty(self):
         return self.head == None
+
+    def append_using_pointer(self, item):
+        if self.is_empty():
+            self.head = Node(item)
+            self.end = self.head
+        else:
+            self.end.set_next(Node(item))
+            self.end = self.end.get_next()
 
     def append(self, item):
         if self.is_empty():
@@ -142,17 +150,3 @@ class LinkedList:
             lst.append(current.get_data())
             current = current.get_next()
         return '[' + ', '.join(str(val) for val in lst) + ']'
-
-mylist = LinkedList()
-mylist.append(1)
-mylist.append(3)
-mylist.append(5)
-mylist.append(7)
-print(mylist)
-mylist.insert(0, 0)
-mylist.insert(2, 2)
-mylist.insert(4, 4)
-mylist.insert(6, 6)
-mylist.insert(8, 8)
-print(mylist)
-print(mylist.slice(0, 7))
