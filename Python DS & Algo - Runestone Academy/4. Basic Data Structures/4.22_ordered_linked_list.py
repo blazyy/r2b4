@@ -3,20 +3,21 @@ class Node:
         self.data = data
         self.next = None
 
+
 class OrderedList():
     def __init__(self):
         self.head = None
 
     def add(self, item):
-        if self.head == None: # If list is empty
+        if self.head is None:  # If list is empty
             self.head = Node(item)
         else:
             current = self.head
-            if item <= current.data: # If element to insert is smallest in the list
+            if item <= current.data:  # If element will be the smallest
                 newNode = Node(item)
                 newNode.next = self.head
                 self.head = newNode
-            else: # If element goes anywhere other than the 0th index
+            else:  # If element goes anywhere other than the 0th index
                 prev = self.head
                 while current and current.data < item:
                     prev = current
@@ -26,10 +27,10 @@ class OrderedList():
                 newNode.next = current
 
     def remove(self, item):
-        if self.head == None:
+        if self.head is None:
             return
         current = self.head
-        if current.data == item: # If element to remove is the head
+        if current.data == item:  # If element to remove is the head
             self.head = current.next
         else:
             current = self.head.next
@@ -59,8 +60,8 @@ class OrderedList():
             idx += 1
         return -1
 
-    def pop(self, index_to_pop = -1):
-        if index_to_pop == -1: # If element to pop is last in the list
+    def pop(self, index_to_pop=-1):
+        if index_to_pop == -1:  # If element to pop is last in the list
             current = self.head
             while current.next.next:
                 current = current.next
@@ -83,7 +84,7 @@ class OrderedList():
             return return_num
 
     def isEmpty(self):
-        return self.head == None
+        return self.head is None
 
     def __str__(self):
         current = self.head
@@ -92,5 +93,6 @@ class OrderedList():
             lst.append(current.data)
             current = current.next
         return '[' + ', '.join([str(ele) for ele in lst]) + ']'
+
 
 ol = OrderedList()

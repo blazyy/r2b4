@@ -15,6 +15,7 @@ class Node:
     def set_next(self, next):
         self.next = next
 
+
 class LinkedList:
     def __init__(self):
         self.head = None
@@ -22,7 +23,7 @@ class LinkedList:
         self.end = None
 
     def is_empty(self):
-        return self.head == None
+        return self.head is None
 
     def append_using_pointer(self, item):
         if self.is_empty():
@@ -37,7 +38,7 @@ class LinkedList:
             self.head = Node(item)
         else:
             temp = self.head
-            while temp.get_next() != None:
+            while temp.get_next() is not None:
                 temp = temp.get_next()
             temp.set_next(Node(item))
         self.size += 1
@@ -52,7 +53,7 @@ class LinkedList:
             idx += 1
         return -1
 
-    def pop(self, index_to_pop = -1):
+    def pop(self, index_to_pop=-1):
         current = self.head
         if index_to_pop == -1:
             while current.get_next().get_next():
@@ -78,14 +79,14 @@ class LinkedList:
     def insert(self, item, index_to_insert):
         idx = 0
         current = self.head
-        previous = self.head
+        prev = self.head
         if index_to_insert == 0:
             newNode = Node(item)
             newNode.set_next(self.head)
             self.head = newNode
         else:
             while current:
-                if idx ==  index_to_insert:
+                if idx == index_to_insert:
                     newNode = Node(item)
                     prev.set_next(newNode)
                     newNode.set_next(current)
@@ -99,7 +100,7 @@ class LinkedList:
         if current.get_data() == ele:
             self.head = current.get_next()
         else:
-            while current != None:
+            while current is not None:
                 if current.get_data() == ele:
                     prev.set_next(current.get_next())
                     break
@@ -110,7 +111,7 @@ class LinkedList:
     def search(self, ele):
         current = self.head
         idx = 0
-        while current != None:
+        while current is not None:
             if current.get_data() == ele:
                 return 'True: {}'.format(idx)
             idx += 1
@@ -146,7 +147,7 @@ class LinkedList:
     def __str__(self):
         current = self.head
         lst = []
-        while current != None:
+        while current is not None:
             lst.append(current.get_data())
             current = current.get_next()
         return '[' + ', '.join(str(val) for val in lst) + ']'
