@@ -5,5 +5,5 @@ def int_to_base(num, base):
     else:
         return int_to_base(num//base, base) + digits[num % base]
 
-
-print(int_to_base(980, 16))
+        
+print(int_to_base(98033, 16))  # 3D4
