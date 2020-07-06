@@ -5,29 +5,27 @@ class HashMap:
         self.items = [None] * self.size  # Contains the values
 
     def hash(self, key):
+        if key < 0:
+            key = self.size + key
         return key % self.size
 
     def rehash(self, old_hash, skip=1):
         return (old_hash + skip) % self.size
 
     def put(self, key, value):
-        if key < 0:
-            key = self.size + key
         hash = self.hash(key)
         while self.slots[hash] is not None and self.slots[hash] != key:
             hash = self.rehash(hash)
-        if self.slots[hash] == key:
-            self.items[hash] = value
-        elif self.slots[hash] is None:
+        if self.slots[hash] is None:
             self.slots[hash] = key
-            self.items[hash] = value
+        self.items[hash] = value
 
     def get(self, key):
         starting_hash = hash = self.hash(key)
         while self.slots[hash] != key:
+            hash = self.rehash(hash)
             if self.slots[hash] is None or hash == starting_hash:
                 return None
-            hash = self.hash(hash)
         return self.items[hash]
 
     def __setitem__(self, key, value):
@@ -50,3 +48,12 @@ H[20] = "chicken"
 H[20] = 'duck'
 print(H.slots)
 print(H.items)
+print(H[-1])
+print(H[26])
+print(H[93])
+print(H[17])
+print(H[77])
+print(H[31])
+print(H[44])
+print(H[55])
+print(H[20])
