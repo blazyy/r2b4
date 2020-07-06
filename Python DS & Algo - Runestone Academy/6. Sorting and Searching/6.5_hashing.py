@@ -34,6 +34,20 @@ class HashMap:
     def __getitem__(self, key):
         return self.get(key)
 
+    def __str__(self):
+        # Function assumes that keys are numbers are their values are strings.
+        return_str = '{'
+        size = 0
+        for key, value in zip(self.slots, self.items):
+            if key is not None:
+                # Decided not to print null keys as a way to hide the fact
+                # that this hashmap is not auto-resizable/infinite in size.
+                return_str += "{}: '{}'".format(key, value)
+                if size < self.size - 1:
+                    return_str += ', '
+            size += 1
+        return return_str + '}'
+
 
 H = HashMap()
 H[-1] = "cattus maximus"
@@ -46,14 +60,4 @@ H[44] = "goat"
 H[55] = "pig"
 H[20] = "chicken"
 H[20] = 'duck'
-print(H.slots)
-print(H.items)
-print(H[-1])
-print(H[26])
-print(H[93])
-print(H[17])
-print(H[77])
-print(H[31])
-print(H[44])
-print(H[55])
-print(H[20])
+print(H)
