@@ -35,7 +35,7 @@ class HashMap:
         return self.get(key)
 
     def __str__(self):
-        # Function assumes that keys are numbers are their values are strings.
+        # Function assumes that keys are integers are their values are strings.
         return_str = '{'
         size = 0
         for key, value in zip(self.slots, self.items):
