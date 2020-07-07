@@ -2,15 +2,13 @@
 using namespace std;
 
 void selection_sort(int * arr, int size){
-    int max_val, max_idx, last_idx;
+    int max_idx, last_idx;
     for(int i = 0; i < size; i++){
-        max_val = INT_MIN;
         last_idx = size - i - 1;
+        max_idx = 0;
         for(int j = 0; j < last_idx+1; j++){
-            if(arr[j] > max_val){
-                max_val = arr[j];
+            if(arr[j] > arr[max_idx])
                 max_idx = j;
-            }
         }
         swap(arr[max_idx], arr[last_idx]);
     }
