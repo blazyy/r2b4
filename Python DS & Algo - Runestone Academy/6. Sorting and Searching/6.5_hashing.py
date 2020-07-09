@@ -39,6 +39,13 @@ class HashMap:
     def __len__(self):
         return self.len
 
+    def __contains__(self, key):
+        return key in self.slots
+        # This is kinda cheaty but this is Python I guess lol
+        # Too lazy for a for loop
+        # But not too lazy for commenting something longer
+        # Hmmm...
+
     def __str__(self):
         # Function assumes that keys are integers are their values are strings.
         return_str = '{'
