@@ -5,6 +5,31 @@ class HashMap:
         self.slots = [None] * self.size  # Contains the keys
         self.items = [None] * self.size  # Contains the values
 
+    def get_load_factor(self):
+        return self.len / self.size
+
+    def increase_size(self, newsize = 101):
+        '''
+        I'm just gonna copy the elements from the old list and put them in
+        the new one. There's probabily a better way to do this.
+        Also, this method only works once, i.e. if the load factor goes
+        above 75% a second time, this method won't work.
+        To make it work I need to increase the size by a specific amount where
+        the new size is greater than the old size by a pre-set margin
+        and the new size is a prime number.
+        Why prime number? To ensure that all slots will be visited.
+        In any case, I'm too lazy to do this today.
+        '''
+        self.newslots = [None] * newsize
+        self.newitems = [None] * newsize
+        for i in range(self.size):
+            if self.slots[i] is not None:
+                self.newslots[i] = self.slots[i]
+                self.newitems[i] = self.items[i]
+        self.slots = self.newslots
+        self.items = self.newitems
+        self.size = newsize
+
     def hash(self, key):
         if key < 0:
             key = self.size + key
@@ -21,13 +46,15 @@ class HashMap:
             self.slots[hash] = key
             self.len += 1
         self.items[hash] = value
+        if self.get_load_factor() >= 0.75:
+            self.increase_size()
 
     def get(self, key):
         starting_hash = hash = self.hash(key)
         while self.slots[hash] != key:
             hash = self.rehash(hash)
             if self.slots[hash] is None or hash == starting_hash:
-                return None
+                raise KeyError(key)
         return self.items[hash]
 
     def __delitem__(self, key):
@@ -84,8 +111,10 @@ H[44] = "goat"
 H[55] = "pig"
 H[20] = "chicken"
 H[20] = 'duck'
+print(len(H))
+print('Size: ', H.size)
 print(H)
 print(len(H))
-del H[202]
 print(H)
 print(len(H))
+print('Size: ', H.size)
