@@ -1,14 +1,16 @@
 class HashMap:
-    def __init__(self, size=11):
+    def __init__(self, size=11, probe_method='linear'):
         self.size = size
         self.len = 0
         self.slots = [None] * self.size  # Contains the keys
         self.items = [None] * self.size  # Contains the values
+        self.quad_probe_counter = 1
+        self.probe_method = probe_method
 
     def get_load_factor(self):
         return self.len / self.size
 
-    def increase_size(self, newsize = 101):
+    def increase_size(self, newsize=101):
         '''
         I'm just gonna copy the elements from the old list and put them in
         the new one. There's probabily a better way to do this.
@@ -35,8 +37,13 @@ class HashMap:
             key = self.size + key
         return key % self.size
 
-    def rehash(self, old_hash, skip=1):
-        return (old_hash + skip) % self.size
+    def rehash(self, old_hash):
+        if self.probe_method == 'linear':
+            return (old_hash + 1) % self.size
+        elif self.probe_method == 'quadratic':
+            new_hash = (old_hash + self.quad_probe_counter ** 2) % self.size
+            self.quad_probe_increment += 1
+            return new_hash
 
     def put(self, key, value):
         hash = self.hash(key)
@@ -46,6 +53,7 @@ class HashMap:
             self.slots[hash] = key
             self.len += 1
         self.items[hash] = value
+        self.quad_probe_increment = 1
         if self.get_load_factor() >= 0.75:
             self.increase_size()
 
@@ -55,6 +63,7 @@ class HashMap:
             hash = self.rehash(hash)
             if self.slots[hash] is None or hash == starting_hash:
                 raise KeyError(key)
+        self.quad_probe_increment = 1
         return self.items[hash]
 
     def __delitem__(self, key):
@@ -100,21 +109,4 @@ class HashMap:
         return return_str + '}'
 
 
-H = HashMap()
-H[-1] = "cattus maximus"
-H[26] = "dog"
-H[93] = "lion"
-H[17] = "tiger"
-H[77] = "bird"
-H[31] = "cow"
-H[44] = "goat"
-H[55] = "pig"
-H[20] = "chicken"
-H[20] = 'duck'
-print(len(H))
-print('Size: ', H.size)
-print(H)
-print(len(H))
-print(H)
-print(len(H))
-print('Size: ', H.size)
+H = HashMap(probe_method='quadratic')
