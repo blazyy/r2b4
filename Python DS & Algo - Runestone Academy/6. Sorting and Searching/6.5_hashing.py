@@ -1,6 +1,7 @@
 class HashMap:
     def __init__(self, size=11):
         self.size = size
+        self.len = 0
         self.slots = [None] * self.size  # Contains the keys
         self.items = [None] * self.size  # Contains the values
 
@@ -18,6 +19,7 @@ class HashMap:
             hash = self.rehash(hash)
         if self.slots[hash] is None:
             self.slots[hash] = key
+            self.len += 1
         self.items[hash] = value
 
     def get(self, key):
@@ -33,6 +35,9 @@ class HashMap:
 
     def __getitem__(self, key):
         return self.get(key)
+
+    def __len__(self):
+        return self.len
 
     def __str__(self):
         # Function assumes that keys are integers are their values are strings.
@@ -61,3 +66,4 @@ H[55] = "pig"
 H[20] = "chicken"
 H[20] = 'duck'
 print(H)
+print(len(H))
