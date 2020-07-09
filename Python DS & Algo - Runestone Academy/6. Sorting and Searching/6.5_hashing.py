@@ -30,6 +30,18 @@ class HashMap:
                 return None
         return self.items[hash]
 
+    def __delitem__(self, key):
+        hash = first_hash = self.hash(key)
+        while self.slots[hash] is not None:
+            if self.slots[hash] == key:
+                self.slots[hash] = None
+                self.items[hash] = None
+                self.len -= 1
+            hash = self.rehash(hash)
+            if hash == first_hash:
+                raise KeyError(key)
+        raise KeyError(key)
+
     def __setitem__(self, key, value):
         self.put(key, value)
 
@@ -72,5 +84,8 @@ H[44] = "goat"
 H[55] = "pig"
 H[20] = "chicken"
 H[20] = 'duck'
+print(H)
+print(len(H))
+del H[202]
 print(H)
 print(len(H))
