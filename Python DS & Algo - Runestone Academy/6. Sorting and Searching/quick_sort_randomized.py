@@ -49,8 +49,16 @@ t2 = timeit.Timer('quick_sort_randomized_time(size)',
                   'from __main__ import quick_sort_randomized_time, size')
 
 
-size = 10
-n_tests = 10000
+size = 100
+n_tests = 1000
 dp = 6
 print('Quick Sort:\t\t', round(t1.timeit(n_tests), dp))
 print('Quick Sort Randomized:\t', round(t2.timeit(n_tests), dp))
+
+
+'''
+On an array of size 100 with 1000 tests:
+
+Quick Sort:              44.203724
+Quick Sort Randomized:   37.811918
+'''
