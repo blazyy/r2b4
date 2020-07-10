@@ -10,9 +10,6 @@ class HashMap:
     def get_load_factor(self):
         return self.len / self.size
 
-    def reset_quad_probe_counter(self):
-        self.quad_probe_counter = 1
-
     def increase_size(self, newsize=101):
         '''
         I'm just gonna copy the elements from the old list and put them in
@@ -56,7 +53,7 @@ class HashMap:
             self.slots[hash] = key
             self.len += 1
         self.items[hash] = value
-        self.reset_quad_probe_counter()
+        self.quad_probe_increment = 1
         if self.get_load_factor() >= 0.75:
             self.increase_size()
 
@@ -66,7 +63,7 @@ class HashMap:
             hash = self.rehash(hash)
             if self.slots[hash] is None or hash == starting_hash:
                 raise KeyError(key)
-        self.reset_quad_probe_counter()
+        self.quad_probe_increment = 1
         return self.items[hash]
 
     def __delitem__(self, key):
