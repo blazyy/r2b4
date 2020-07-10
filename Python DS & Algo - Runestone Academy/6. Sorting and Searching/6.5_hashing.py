@@ -10,6 +10,9 @@ class HashMap:
     def get_load_factor(self):
         return self.len / self.size
 
+    def reset_quad_probe_counter(self):
+        self.quad_probe_counter = 1
+
     def increase_size(self, newsize=101):
         '''
         I'm just gonna copy the elements from the old list and put them in
@@ -42,7 +45,7 @@ class HashMap:
             return (old_hash + 1) % self.size
         elif self.probe_method == 'quadratic':
             new_hash = (old_hash + self.quad_probe_counter ** 2) % self.size
-            self.quad_probe_increment += 1
+            self.quad_probe_counter += 1
             return new_hash
 
     def put(self, key, value):
@@ -53,7 +56,7 @@ class HashMap:
             self.slots[hash] = key
             self.len += 1
         self.items[hash] = value
-        self.quad_probe_increment = 1
+        self.reset_quad_probe_counter()
         if self.get_load_factor() >= 0.75:
             self.increase_size()
 
@@ -63,7 +66,7 @@ class HashMap:
             hash = self.rehash(hash)
             if self.slots[hash] is None or hash == starting_hash:
                 raise KeyError(key)
-        self.quad_probe_increment = 1
+        self.reset_quad_probe_counter()
         return self.items[hash]
 
     def __delitem__(self, key):
@@ -100,7 +103,7 @@ class HashMap:
         size = 0
         for key, value in zip(self.slots, self.items):
             if key is not None:
-                # Decided not to print null keys as a way to hide the fact
+                # Decided not to print null keys as a w ay to hide the fact
                 # that this hashmap is not auto-resizable/infinite in size.
                 return_str += "{}: '{}'".format(key, value)
                 if size < self.size - 1:
