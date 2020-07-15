@@ -47,5 +47,10 @@ public:
 };
 
 int main(void){
-    BinaryTree tree(69);
+    BinaryTree tree(3);
+    tree.insert_right(4);
+    tree.insert_left(5);
+    cout << tree.get_root() << endl;
+    cout << tree.get_right() -> get_root() << endl;
+    cout << tree.get_left() -> get_root() << endl;
 }
