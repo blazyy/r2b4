@@ -4,17 +4,12 @@ using namespace std;
 
 class BinaryTree{
 private:
-    int root;
+    char root;
     BinaryTree * left = NULL;
     BinaryTree * right = NULL;
 public:
-    BinaryTree(int root_val){
-        // constructor
-        root = root_val;
-    }
-    void insert_right(int value){
-        BinaryTree * new_node = new BinaryTree(value);
-        new_node -> root = value;
+    void insert_right(char value){
+        BinaryTree * new_node = new BinaryTree();
         if(right == NULL)
             right = new_node;
         else{
@@ -22,12 +17,8 @@ public:
             right = new_node;
         }
     }
-    BinaryTree * get_right(){
-        return right;
-    }
-    void insert_left(int value){
-        BinaryTree * new_node = new BinaryTree(value);
-        new_node -> root = value;
+    void insert_left(char value){
+        BinaryTree * new_node = new BinaryTree();
         if(left == NULL)
             left = new_node;
         else{
@@ -35,22 +26,54 @@ public:
             left = new_node;
         }
     }
+    BinaryTree * get_right(){
+        return right;
+    }
     BinaryTree * get_left(){
         return left;
     }
-    void set_root(int value){
-        root = value;
-    }
-    int get_root(){
+    char get_root(){
         return root;
+    }
+    void set_root(char value){
+        root = value;
     }
 };
 
+void preorder(BinaryTree * tree){
+    if(tree != NULL){
+        cout << tree -> get_root() << " ";
+        preorder(tree -> get_left());
+        preorder(tree -> get_right());
+    }
+}
+void inorder(BinaryTree * tree){
+    if(tree != NULL){
+        inorder(tree -> get_left());
+        cout << tree -> get_root() << " ";
+        inorder(tree -> get_right());
+    }
+}
+void postorder(BinaryTree * tree){
+    if(tree != NULL){
+        postorder(tree -> get_left());
+        postorder(tree -> get_right());
+        cout << tree -> get_root() << " ";
+    }
+}
+
 int main(void){
-    BinaryTree tree(3);
-    tree.insert_right(4);
-    tree.insert_left(5);
-    cout << tree.get_root() << endl;
-    cout << tree.get_right() -> get_root() << endl;
-    cout << tree.get_left() -> get_root() << endl;
+    BinaryTree * tree;
+    tree -> set_root(1);
+    tree -> insert_left(2);
+    tree -> get_left() -> insert_left(3);
+    tree -> get_left() -> insert_right(4);
+    tree -> insert_right(5);
+    tree -> get_right() -> insert_left(6);
+    tree -> get_right() -> insert_right(7);
+    preorder(tree);
+    cout << "\n";
+    inorder(tree);
+    cout << "\n";
+    postorder(tree);
 }
