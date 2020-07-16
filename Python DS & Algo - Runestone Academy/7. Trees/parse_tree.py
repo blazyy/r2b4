@@ -5,7 +5,7 @@ import operator
 
 def build_parse_tree(expr):
     expr = expr.split(' ')
-    tree = BinaryTree('')
+    tree = BinaryTree()
     stack = Stack()  # keeps track of parents nodes so we can return to them
     stack.push(tree)  # this is needed when the expr doesn't start with a '('
 
