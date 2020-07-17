@@ -63,7 +63,7 @@ void postorder(BinaryTree * tree){
 }
 
 int main(void){
-    BinaryTree * tree;
+    BinaryTree * tree = new BinaryTree;
     tree -> set_root(1);
     tree -> insert_left(2);
     tree -> get_left() -> insert_left(3);
@@ -75,5 +75,5 @@ int main(void){
     cout << "\n";
     inorder(tree);
     cout << "\n";
-    postorder(tree);
+    preorder(tree);
 }
