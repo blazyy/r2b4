@@ -6,6 +6,12 @@ class BinaryHeap:
         self.heap = [0]  # 0 to make integer divison possible
         self.size = 0
 
+    def is_empty(self):
+        return self.size == 0
+
+    def get_size(self):
+        return self.size
+
     def insert(self, value):
         self.heap.append(value)
         self.size += 1
@@ -13,6 +19,13 @@ class BinaryHeap:
         while self.heap[idx] < self.heap[idx//2] and idx > 0:
             self.heap[idx], self.heap[idx//2] = self.heap[idx//2], self.heap[idx]
             idx = idx // 2
+
+    def build_heap(self, lst):
+        for num in lst:
+            self.insert(num)
+
+    def find_min(self):
+        return self.heap[1]
 
     def del_min(self):
         return_val = self.heap[1]
