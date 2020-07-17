@@ -10,6 +10,9 @@ public:
     BinaryHeap(){
         heap.push_back(0);
     }
+    bool is_empty(){
+        return (size == 0)? true : false;
+    }
     void insert(int value){
         heap.push_back(value);
         int idx = ++size;
@@ -17,6 +20,12 @@ public:
             swap(heap[idx], heap[idx/2]);
             idx /= 2;
         }
+    }
+    int get_size(){
+        return size;
+    }
+    int find_min(){
+        return heap[1];
     }
     int del_min(){
         int l_idx, r_idx, idx = 1, min_child_idx, return_val;
@@ -39,6 +48,10 @@ public:
             else break;
         }
         return return_val;
+    }
+    void build_heap(int * arr, int size){
+        for(int i=0; i<size; i++)
+            insert(arr[i]);
     }
 };
 
