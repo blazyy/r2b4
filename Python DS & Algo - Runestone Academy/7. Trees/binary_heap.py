@@ -21,18 +21,28 @@ class BinaryHeap:
             idx = idx // 2
 
     def build_heap(self, lst):
-        for num in lst:
-            self.insert(num)
+        self.size = len(lst)
+        # The entire point of this function is so that we can sort an existing
+        # list in O(log n), but the slice function below makes it O(n log n).
+        # Unless I change the implementation there's no way around this,
+        # I could probably use a globally declared array. For another day.
+        self.heap = [0] + lst[:]
+        i = self.size // 2
+        # Why do we start at the middle and move to the root?
+        '''
+        Although we start out in the middle of the tree and work our way back
+        toward the root, the perc_down method ensures that the largest child is
+        always moved down the tree. Because the heap is a complete binary tree,
+        any nodes past the halfway point will be leaves and therefore have no
+        children. 
+        '''
+        for i in range(self.size//2, 0, -1):
+            self.perc_down(i)
 
     def find_min(self):
         return self.heap[1]
 
-    def del_min(self):
-        return_val = self.heap[1]
-        self.heap[1] = self.heap[self.size]
-        self.heap.pop()
-        self.size -= 1
-        idx = 1
+    def perc_down(self, idx):
         while idx * 2 <= self.size:
             # Finding min child
             l_idx = idx * 2
@@ -50,6 +60,13 @@ class BinaryHeap:
                 idx = min_child_idx
             else:
                 break
+
+    def del_min(self):
+        return_val = self.heap[1]
+        self.heap[1] = self.heap[self.size]
+        self.heap.pop()
+        self.size -= 1
+        self.perc_down(idx=1)
         return return_val
 
     def __str__(self):
