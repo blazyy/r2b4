@@ -34,7 +34,7 @@ class BinaryHeap:
         toward the root, the perc_down method ensures that the largest child is
         always moved down the tree. Because the heap is a complete binary tree,
         any nodes past the halfway point will be leaves and therefore have no
-        children. 
+        children.
         '''
         for i in range(self.size//2, 0, -1):
             self.perc_down(i)
@@ -77,7 +77,6 @@ bh = BinaryHeap()
 lst_size = 10
 lst = [random.randint(1, 100) for i in range(lst_size)]
 print('Random List:\t\t\t', lst)
-for num in lst:
-    bh.insert(num)
+bh.build_heap(lst)
 print('Sorted List:\t\t\t', sorted(lst))
 print('Binary Heap Deleted Minimums:\t', [bh.del_min() for i in range(lst_size)])
