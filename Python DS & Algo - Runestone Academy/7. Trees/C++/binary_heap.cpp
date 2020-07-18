@@ -27,11 +27,8 @@ public:
     int find_min(){
         return heap[1];
     }
-    int del_min(){
-        int l_idx, r_idx, idx = 1, min_child_idx, return_val;
-        return_val = heap[1];
-        heap[1] = heap[size--];
-        heap.pop_back();
+    void perc_down(int idx){
+        int l_idx, r_idx, min_child_idx;
         while(idx * 2 <= size){
             // finding smaller child
             l_idx = idx * 2;
@@ -47,14 +44,28 @@ public:
             }
             else break;
         }
+    }
+    int del_min(){
+        int return_val;
+        return_val = heap[1];
+        heap[1] = heap[size--];
+        heap.pop_back();
+        perc_down(1);
         return return_val;
     }
-    void build_heap(int * arr, int size){
-        for(int i=0; i<size; i++)
-            insert(arr[i]);
+    void build_heap(int * arr, int arr_size){
+        // First, copying array elements to the current heap
+        // Does copying even make sense? Idk. Probably not.
+        for(int i=0; i<arr_size; i++){
+            heap.push_back(arr[i]);
+            size++;
+        }
+        int idx = size/2;
+        for(int i=idx; i>0; i--)
+            perc_down(i);
     }
 };
 
 int main(void){
-    BinaryHeap bh;
+    BinaryHeap bh1;
 }
