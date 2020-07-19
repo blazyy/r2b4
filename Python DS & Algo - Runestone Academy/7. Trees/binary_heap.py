@@ -2,9 +2,11 @@ import random
 
 
 class BinaryHeap:
-    def __init__(self):
-        self.heap = [0]  # 0 to make integer divison possible
-        self.size = 0
+    def __init__(self, heap=[]):
+        self.heap = [0] + heap  # 0 to make integer divison possible
+        self.size = len(heap)
+        if heap != []:
+            self.build_heap()
 
     def is_empty(self):
         return self.size == 0
@@ -20,16 +22,9 @@ class BinaryHeap:
             self.heap[idx], self.heap[idx//2] = self.heap[idx//2], self.heap[idx]
             idx = idx // 2
 
-    def build_heap(self, lst):
-        self.size = len(lst)
-        # The entire point of this function is so that we can sort an existing
-        # list in O(log n), but the slice function below makes it O(n log n).
-        # Unless I change the implementation there's no way around this,
-        # I could probably use a globally declared array. For another day.
-        self.heap = [0] + lst[:]
-        i = self.size // 2
-        # Why do we start at the middle and move to the root?
+    def build_heap(self):
         '''
+        Why do we start at the middle and move to the root?
         Although we start out in the middle of the tree and work our way back
         toward the root, the perc_down method ensures that the largest child is
         always moved down the tree. Because the heap is a complete binary tree,
@@ -47,13 +42,10 @@ class BinaryHeap:
             # Finding min child
             l_idx = idx * 2
             r_idx = idx * 2 + 1
-            if r_idx > self.size:
-                min_child_idx = idx * 2
+            if r_idx > self.size or self.heap[l_idx] < self.heap[r_idx]:
+                min_child_idx = l_idx
             else:
-                if self.heap[l_idx] < self.heap[r_idx]:
-                    min_child_idx = l_idx
-                else:
-                    min_child_idx = r_idx
+                min_child_idx = r_idx
             # Swapping current root with smaller child
             if self.heap[idx] > self.heap[min_child_idx]:
                 self.heap[idx], self.heap[min_child_idx] = self.heap[min_child_idx], self.heap[idx]
@@ -73,10 +65,9 @@ class BinaryHeap:
         return ' '.join(str(num) for num in self.heap)
 
 
-bh = BinaryHeap()
-lst_size = 10
-lst = [random.randint(1, 100) for i in range(lst_size)]
+size = 10
+lst = [random.randint(1, 100) for i in range(size)]
+bh = BinaryHeap(lst)
 print('Random List:\t\t\t', lst)
-bh.build_heap(lst)
 print('Sorted List:\t\t\t', sorted(lst))
-print('Binary Heap Deleted Minimums:\t', [bh.del_min() for i in range(lst_size)])
+print('Binary Heap Deleted Minimums:\t', [bh.del_min() for i in range(size)])
