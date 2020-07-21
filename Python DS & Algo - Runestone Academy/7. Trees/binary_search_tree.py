@@ -1,3 +1,7 @@
+import random
+import string
+
+
 class Node:
     def __init__(self, key, value, parent=None, left=None, right=None):
         self.key = key
@@ -13,6 +17,18 @@ class Node:
 
     def is_right_child(self):
         if self.parent is not None and self == self.parent.right:
+            return True
+        return False
+
+    def has_no_children(self):
+        if self.right is None and self.left is None:
+            return True
+        return False
+
+    def has_one_child(self):
+        if self.right is None and self.left is not None:
+            return True
+        elif self.right is not None and self.left is None:
             return True
         return False
 
@@ -64,18 +80,6 @@ class BinarySearchTree:
         except KeyError:
             return False
 
-    def has_no_children(self, node):
-        if node.right is None and node.left is None:
-            return True
-        return False
-
-    def has_one_child(self, node):
-        if node.right is None and node.left is not None:
-            return True
-        elif node.right is not None and node.left is None:
-            return True
-        return False
-
     def find_min(self, node):
         while node.left:
             node = node.left
@@ -109,21 +113,66 @@ class BinarySearchTree:
                 current = self.root
                 while current:
                     if key == current.key:
-                        if self.has_no_children(current):
+                        # If node to delete has no children
+                        if current.has_no_children():
                             if current.parent.left == current:
                                 current.parent.left = None
                             else:
                                 current.parent.right = None
-                        elif self.has_one_child(current):
+                        # If node to delete has one child
+                        elif current.has_one_child():
+                            # If node to delete has a left child
                             if current.left is not None:
                                 current.left.parent = current.parent
-                                current.parent.left = current.left
-                            else:
+                                if current.is_left_child():
+                                    current.parent.left = current.left
+                                else:
+                                    current.parent.right = current.left
+                            # If node to delete has a right child
+                            elif current.right is not None:
                                 current.right.parent = current.parent
-                                current.parent.right = current.right
+                                if current.is_left_child():
+                                    current.parent.left = current.right
+                                else:
+                                    current.parent.right = current.right
+                            # If the node with one child is the root
+                            elif current.parent is None:
+                                if current.left is not None:
+                                    self.root = current.left
+                                    self.root.parent = None
+                                else:
+                                    self.root = current.right
+                                    self.root.parent = None
                         # If node to delete has two children
                         else:
-                            successor = self.find_successor(current)
+                            succ = self.find_succ(current)
+                            current.key = succ.key
+                            current.value = succ.value
+                            # A succ is guaranteed to have 0-1 children.
+                            # We could call delete() recursively, but that
+                            # would start from the root and would take extra
+                            # time, so we write deletion code again here.
+
+                            # If succ has no children
+                            if succ.has_no_children():
+                                if succ.is_right_child():
+                                    succ.parent.right = None
+                                else:
+                                    succ.parent.left = None
+                            # If succ has one child
+                            else:
+                                if succ.left is not None:
+                                    succ.left.parent = succ.parent
+                                    if succ.is_left_child():
+                                        succ.parent.left = succ.left
+                                    else:
+                                        succ.parent.right = succ.left
+                                else:
+                                    succ.right.parent = succ.parent
+                                    if succ.is_left_child():
+                                        succ.parent.left = succ.right
+                                    else:
+                                        succ.parent.right = succ.right
                         self.size -= 1
                         return
                     elif key < current.key:
@@ -133,7 +182,21 @@ class BinarySearchTree:
             else:
                 raise KeyError(key)
 
+
+def inorder(node):
+    if node is None:
+        return
+    inorder(node.left)
+    print(node.key, end=' ')
+    inorder(node.right)
+
+
 bst = BinarySearchTree()
-bst[45] = 'yolo'
-print(45 in bst)
-print(66 in bst)
+size = 10
+keys = [random.randint(1, 99) for i in range(size)]
+values = [''.join([random.choice(string.ascii_letters) for i in range(4)]) for i in range(size)]
+for i in range(size):
+    bst[keys[i]] = values[i]
+print('Keys:\t\t', ' '.join([str(key) for key in keys]))
+print('Inorder:\t ', end='')
+inorder(bst.root)
