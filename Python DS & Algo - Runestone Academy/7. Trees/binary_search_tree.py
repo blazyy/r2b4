@@ -1,5 +1,6 @@
 import random
 import string
+arr = []
 
 
 class Node:
@@ -83,13 +84,13 @@ class BinarySearchTree:
     def find_min(self, node):
         while node.left:
             node = node.left
-        return node.key
+        return node
 
     def find_successor(self, node):
         # If right subtree of node is not null, succ is the smallest element
         # in the right subtree
         if node.right is not None:
-            return self.find_min(self.right)
+            return self.find_min(node.right)
         else:
             # If node has no right child and is the left child of its parent,
             # then the parent is the successor.
@@ -106,10 +107,10 @@ class BinarySearchTree:
 
     def delete(self, key):
         # If node to delete is root and there's only one node in the tree
-        if key == self.root.key and self.has_no_children(self.root):
+        if key == self.root.key and self.root.has_no_children():
             self.root = None
         else:
-            if self.__contains__(self.root, key):
+            if self.__contains__(key):
                 current = self.root
                 while current:
                     if key == current.key:
@@ -121,8 +122,16 @@ class BinarySearchTree:
                                 current.parent.right = None
                         # If node to delete has one child
                         elif current.has_one_child():
+                            # If node with one child is a root
+                            if current.parent is None:
+                                if current.left is not None:
+                                    self.root = current.left
+                                    self.root.parent = None
+                                else:
+                                    self.root = current.right
+                                    self.root.parent = None
                             # If node to delete has a left child
-                            if current.left is not None:
+                            elif current.left is not None:
                                 current.left.parent = current.parent
                                 if current.is_left_child():
                                     current.parent.left = current.left
@@ -135,17 +144,9 @@ class BinarySearchTree:
                                     current.parent.left = current.right
                                 else:
                                     current.parent.right = current.right
-                            # If the node with one child is the root
-                            elif current.parent is None:
-                                if current.left is not None:
-                                    self.root = current.left
-                                    self.root.parent = None
-                                else:
-                                    self.root = current.right
-                                    self.root.parent = None
                         # If node to delete has two children
                         else:
-                            succ = self.find_succ(current)
+                            succ = self.find_successor(current)
                             current.key = succ.key
                             current.value = succ.value
                             # A succ is guaranteed to have 0-1 children.
@@ -173,7 +174,6 @@ class BinarySearchTree:
                                         succ.parent.left = succ.right
                                     else:
                                         succ.parent.right = succ.right
-                        self.size -= 1
                         return
                     elif key < current.key:
                         current = current.left
@@ -183,20 +183,52 @@ class BinarySearchTree:
                 raise KeyError(key)
 
 
-def inorder(node):
+def print_inorder(node):
     if node is None:
         return
-    inorder(node.left)
+    print_inorder(node.left)
     print(node.key, end=' ')
-    inorder(node.right)
+    print_inorder(node.right)
+
+
+def return_inorder(node):
+    # The print_inorder() above is different since it just prints the nodes out
+    # This one appends everything to a globally declared array.
+    if node is not None:
+        is_tree_valid(node.left)
+        arr.append(node.key)
+        is_tree_valid(node.right)
+
+
+def is_tree_valid(node):
+    '''This function could be improved by checking the previous node as the
+    inorder traversal is being built. The recursion was getting annoying
+    so I just did something simpler. It's the same complexity, but slower.
+    The best solution would be O(n) alone but this one is O(n) + O(n)
+    which is technically still O(n) will obviously be slower.'''
+    for i in range(1, len(arr)):
+        if arr[i-1] > arr[i]:
+            return False
+    return True
 
 
 bst = BinarySearchTree()
 size = 10
-keys = [random.randint(1, 99) for i in range(size)]
+keys = random.sample([i for i in range(1, 99)], size)
 values = [''.join([random.choice(string.ascii_letters) for i in range(4)]) for i in range(size)]
 for i in range(size):
     bst[keys[i]] = values[i]
 print('Keys:\t\t', ' '.join([str(key) for key in keys]))
 print('Inorder:\t ', end='')
-inorder(bst.root)
+print_inorder(bst.root)
+print()
+sample_size = 5
+random_nodes = [keys[i] for i in random.sample([i for i in range(size)], sample_size)]
+print('Deleting: \t', ' '.join([str(node) for node in random_nodes]))
+for node in random_nodes:
+    bst.delete(node)
+print('New Inorder:\t ', end='')
+print_inorder(bst.root)
+print()
+prev = None
+print('Tree valid?:\t', is_tree_valid(bst.root))
