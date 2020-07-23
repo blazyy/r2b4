@@ -56,6 +56,7 @@ def postorder(tree):
         print(tree.get_root(), ' ', end='')
 
 
+'''
 tree = BinaryTree()
 tree.set_root(1)
 tree.insert_left(2)
@@ -69,3 +70,4 @@ print()
 inorder(tree)
 print()
 postorder(tree)
+'''
