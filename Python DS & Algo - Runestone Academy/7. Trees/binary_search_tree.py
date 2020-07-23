@@ -87,23 +87,24 @@ class BinarySearchTree:
         return node
 
     def find_successor(self, node):
+        succ = None
         # If right subtree of node is not null, succ is the smallest element
         # in the right subtree
         if node.right is not None:
-            return self.find_min(node.right)
+            succ = self.find_min(node.right)
         else:
             # If node has no right child and is the left child of its parent,
             # then the parent is the successor.
             if node.is_left_child():
-                return node.parent
+                succ = node.parent
             # If node has no right child and is is the right child of its parent
             # then the successor to this node is the successor of its parent
             # excluding this node.
             elif node.is_right_child():
                 self.parent.right = None  # Temporarily excluding the node
-                return self.find_successor(node.parent)
+                succ = self.find_successor(node.parent)
                 self.parent.right = self
-        return None
+        return succ
 
     def delete(self, key):
         # If node to delete is root and there's only one node in the tree
@@ -214,7 +215,8 @@ def is_tree_valid(node):
 
 bst = BinarySearchTree()
 size = 10
-keys = random.sample([i for i in range(1, 99)], size)
+# keys = random.sample([i for i in range(1, 99)], size)
+keys = [96, 63, 38, 64, 16, 23, 83, 61, 78, 9, 60]
 values = [''.join([random.choice(string.ascii_letters) for i in range(4)]) for i in range(size)]
 for i in range(size):
     bst[keys[i]] = values[i]
