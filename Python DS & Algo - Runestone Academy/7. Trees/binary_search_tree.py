@@ -1,6 +1,5 @@
 import random
 import string
-arr = []
 
 
 class Node:
@@ -192,21 +191,25 @@ def print_inorder(node):
     print_inorder(node.right)
 
 
-def return_inorder(node):
+arr = []
+
+
+def inorder(node):
     # The print_inorder() above is different since it just prints the nodes out
     # This one appends everything to a globally declared array.
-    if node is not None:
-        is_tree_valid(node.left)
+    if node:
+        inorder(node.left)
         arr.append(node.key)
-        is_tree_valid(node.right)
+        inorder(node.right)
 
 
-def is_tree_valid(node):
+def is_tree_valid(root):
     '''This function could be improved by checking the previous node as the
     inorder traversal is being built. The recursion was getting annoying
     so I just did something simpler. It's the same complexity, but slower.
     The best solution would be O(n) alone but this one is O(n) + O(n)
     which is technically still O(n) will obviously be slower.'''
+    inorder(root)
     for i in range(1, len(arr)):
         if arr[i-1] > arr[i]:
             return False
