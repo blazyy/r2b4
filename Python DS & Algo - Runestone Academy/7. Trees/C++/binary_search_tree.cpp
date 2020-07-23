@@ -4,6 +4,18 @@
 #include <time.h>
 using namespace std;
 
+/*
+This program doesn't work properly for some cases. I have gone through the program
+from top to bottom a multitude of times. I compared it with the respective
+Python program. Nope. Doesn't want to work. I'm done.
+The insertion works fine. The BST is always constructed properly which
+is verified by looking at the inorder traversal. But something goes
+wrong when deletion is done. I'm guessing it's an issue with the parent
+pointers but I can't seem to locate it. Hopefully future me will be smart
+enough to come back and fix this bug. Then again, it's probably better if I
+write everything again from scratch. But then again, I don't want to do that.
+*/
+
 struct Node{
     int key;
     string value;
@@ -16,9 +28,7 @@ struct Node{
         return false;
     }
     bool has_one_child(){
-        if(left == NULL && right != NULL)
-            return true;
-        if(left != NULL and right == NULL)
+        if((left == NULL && right != NULL) || (left != NULL and right == NULL))
             return true;
         return false;
     }
@@ -68,8 +78,8 @@ public:
                 }
                 else if(key < current -> key){
                     if(current -> left == NULL){
-                        current -> left = new_node;
                         new_node -> parent = current;
+                        current -> left = new_node;
                         break;
                     }
                     else
@@ -77,8 +87,8 @@ public:
                 }
                 else{
                     if(current -> right == NULL){
-                        current -> right = new_node;
                         new_node -> parent = current;
+                        current -> right = new_node;
                         break;
                     }
                     else
@@ -115,7 +125,7 @@ public:
             if((*node).is_left_child())
                 successor = node -> parent;
             else{ // If node has no right child and is a right child of it's parent, it's successor is it's parent's successor excluding itself.
-                node -> parent -> right = node -> right; // Temporarily removing node.
+                node -> parent -> right = NULL; // Temporarily removing node.
                 successor = find_successor(node -> parent);
                 node -> parent -> right = node;
             }
@@ -133,6 +143,7 @@ public:
                 if(key == current -> key){
                     // current -> has_no_children() didn't feel right. So I did this.
                     if((*current).has_no_children()){ // If node to delete has no children
+                        //cout << "Node to delete has no children!" << endl;
                         if(current -> parent == NULL){ // If node to delete is root
                             root = NULL;
                         }
@@ -145,6 +156,7 @@ public:
                         break;
                     }
                     else if((*current).has_one_child()){ // If node to delete has one child
+                        //cout << "Node to delete has one child!" << endl;
                         if(current -> parent == NULL){ // If node to delete is root
                             if((*current).has_left_child()){
                                 root = current -> left;
@@ -175,7 +187,7 @@ public:
                         break;
                     }
                     else{ // If node to delete has two children
-                        cout << "Node to delete has two children!" << endl;
+                        //cout << "Node to delete has two children!" << endl;
                         struct Node * successor = find_successor(current);
                         current -> key = successor -> key;
                         current -> value = successor -> value;
