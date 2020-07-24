@@ -63,6 +63,9 @@ class BinarySearchTree:
                     else:
                         current = current.right
 
+    def put(self, key, value):
+        self.__setitem__(key, value)
+
     def __getitem__(self, key):
         current = self.root
         while current:
