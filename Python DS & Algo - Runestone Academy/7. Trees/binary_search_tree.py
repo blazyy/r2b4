@@ -1,5 +1,6 @@
 import random
 import string
+import math
 
 
 class Node:
@@ -183,6 +184,33 @@ class BinarySearchTree:
                 raise KeyError(key)
 
 
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    def __setitem__(self, key, value):
+        if self.root is None:
+            self.root = Node(key, value)
+        else:
+            current = self.root
+            while current:
+                if key == current.key:
+                    current.value = value
+                    return
+                elif key > current.key:
+                    if current.left is None:
+                        current.left = Node(key, value, parent=current)
+                        return
+                    else:
+                        current = current.left
+                else:
+                    if current.right is None:
+                        current.right = Node(key, value, parent=current)
+                        return
+                    else:
+                        current = current.right
+
+
 def print_inorder(node):
     if node is None:
         return
@@ -191,35 +219,28 @@ def print_inorder(node):
     print_inorder(node.right)
 
 
-arr = []
+def is_valid_bst(node, min=-math.inf, max=math.inf):
+    '''Uses a range to check if a number inside a node is valid.'''
+    if node is None:
+        return True
+    if node.key < min or node.key > max:
+        return False
+    return is_valid_bst(node.left, max=node.key) and is_valid_bst(node.right, min=node.key)
 
 
-def inorder(node):
-    # The print_inorder() above is different since it just prints the nodes out
-    # This one appends everything to a globally declared array.
-    if node:
-        inorder(node.left)
-        arr.append(node.key)
-        inorder(node.right)
-
-
-def is_tree_valid(root):
-    '''This function could be improved by checking the previous node as the
-    inorder traversal is being built. The recursion was getting annoying
-    so I just did something simpler. It's the same complexity, but slower.
-    The best solution would be O(n) alone but this one is O(n) + O(n)
-    which is technically still O(n) will obviously be slower.'''
-    inorder(root)
-    for i in range(1, len(arr)):
-        if arr[i-1] > arr[i]:
-            return False
-    return True
+def is_valid_bst_2(node, child='temp', prev=None):
+    '''Uses the value of the parent node to check if the BST is valid'''
+    if node is None:
+        return True
+    if (child == 'l' and node.key > prev) or (child == 'r' and node.key < prev):
+        return False
+    return is_valid_bst_2(node.left, 'l', node.key) and is_valid_bst_2(node.right, 'r',node.key)
 
 
 bst = BinarySearchTree()
+
 size = 10
-# keys = random.sample([i for i in range(1, 99)], size)
-keys = [96, 63, 38, 64, 16, 23, 83, 61, 78, 9, 60]
+keys = random.sample([i for i in range(1, 99)], size)
 values = [''.join([random.choice(string.ascii_letters) for i in range(4)]) for i in range(size)]
 for i in range(size):
     bst[keys[i]] = values[i]
@@ -236,4 +257,15 @@ print('New Inorder:\t ', end='')
 print_inorder(bst.root)
 print()
 prev = None
-print('Tree valid?:\t', is_tree_valid(bst.root))
+print('Tree valid?:\t', is_valid_bst(bst.root))
+print('Tree valid?:\t', is_valid_bst_2(bst.root))
+
+# Making a wrong tree to check if the BST validation functions work.
+# Spoiler alert: They do.
+bt = BinaryTree()
+for key in keys:
+    bt[key] = 'placeholder'
+print_inorder(bt.root)
+print()
+print('Tree valid?:\t', is_valid_bst(bt.root))
+print('Tree valid?:\t', is_valid_bst_2(bt.root))
