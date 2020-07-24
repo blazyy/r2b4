@@ -236,7 +236,7 @@ def is_valid_bst_2(node, child='temp', prev=None):
         return False
     return is_valid_bst_2(node.left, 'l', node.key) and is_valid_bst_2(node.right, 'r',node.key)
 
-
+'''
 bst = BinarySearchTree()
 
 size = 10
@@ -269,3 +269,4 @@ print_inorder(bt.root)
 print()
 print('Tree valid?:\t', is_valid_bst(bt.root))
 print('Tree valid?:\t', is_valid_bst_2(bt.root))
+'''
