@@ -1,5 +1,5 @@
 window.setTimeout(function() {
-    var todos = []
+    let todos = [];
     while(true){
         let option = prompt("What would you like to do?");
         if(option === "new"){
