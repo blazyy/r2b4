@@ -15,13 +15,14 @@ const msg_box = document.querySelector("#msg_box");
 // Checking for any change in the number input
 winning_score_input.addEventListener("change", function(){
     winning_score = Number(winning_score_input.value);
-    winning_score_display.textContent = winning_score;
-});
-
-// Another event listener if the person manually inputs a number without using the input arrows
-winning_score_input.addEventListener("input", function(){
-    winning_score = Number(winning_score_input.value);
-    winning_score_display.textContent = winning_score;
+    if(winning_score < 0){
+        msg_box.innerHTML = "Winning score cannot be negative!";
+        game_over = true;
+    }
+    else{
+        msg_box.innerHTML = "Playing to <span id=\"winning_score_display\">" + winning_score + "</span>";
+        game_over = false;
+    }
 });
 
 // Player 1 button functionality
@@ -54,6 +55,8 @@ p2_button.addEventListener("click", function(){
 reset_button.addEventListener("click", function(){
     p1_score = 0;
     p2_score = 0;
+    winning_score = 5;
+    winning_score_input.value = winning_score;
     p1_score_display.textContent = p1_score;
     p2_score_display.textContent = p2_score;
     p1_score_display.classList.remove("green");
