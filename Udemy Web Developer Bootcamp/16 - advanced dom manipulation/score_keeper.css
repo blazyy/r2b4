@@ -1,0 +1,11 @@
+body{
+    text-align: center;
+}
+
+#content{
+    padding-top: 5%;
+}
+
+.green{
+    color: rgb(67, 177, 62);
+}
