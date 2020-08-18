@@ -12,8 +12,14 @@ const winning_score_display = document.querySelector("#winning_score_display");
 const msg_box = document.querySelector("#msg_box");
 
 
-// Checking for any change he number input
+// Checking for any change in the number input
 winning_score_input.addEventListener("change", function(){
+    winning_score = Number(winning_score_input.value);
+    winning_score_display.textContent = winning_score;
+});
+
+// Another event listener if the person manually inputs a number without using the input arrows
+winning_score_input.addEventListener("input", function(){
     winning_score = Number(winning_score_input.value);
     winning_score_display.textContent = winning_score;
 });
