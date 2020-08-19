@@ -49,18 +49,16 @@ easy_button.addEventListener("click", function(){
     hard_button.classList.remove("selected");
     easy_button.classList.add("selected");
     number_of_squares = 6;
-    for(let i = 6; i < 9; i++){
+    for(let i = 6; i < 9; i++)
         squares[i].style.display = "none";
-    }
     fill_squares();
 });
 
 hard_button.addEventListener("click", function(){
     easy_button.classList.remove("selected");
     hard_button.classList.add("selected");
-    for(let i = 6; i < 9; i++){
+    for(let i = 6; i < 9; i++)
         squares[i].style.display = "block";
-    }
     number_of_squares = 9;
     fill_squares()
 });
