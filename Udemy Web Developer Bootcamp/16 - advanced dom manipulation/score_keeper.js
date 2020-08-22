@@ -25,11 +25,29 @@ winning_score_input.addEventListener("change", function(){
     }
 });
 
+function reset(){
+    winning_score_input.disabled = false;
+    p1_score = 0;
+    p2_score = 0;
+    winning_score = 5;
+    winning_score_input.value = winning_score;
+    p1_score_display.textContent = p1_score;
+    p2_score_display.textContent = p2_score;
+    p1_score_display.classList.remove("green");
+    p2_score_display.classList.remove("green");
+    msg_box.innerHTML = "Playing to <span id=\"winning_score_display\">" + winning_score + "</span>";
+    game_over = false;
+}
+
+// Resetting after game over
+reset_button.addEventListener("click", reset);
+
 // Player 1 button functionality
 p1_button.addEventListener("click", function(){
     if(!game_over){
         p1_score++;
         p1_score_display.textContent = p1_score;
+        winning_score_input.disabled = true;
         if(p1_score === winning_score){
             p1_score_display.classList.add("green");
             msg_box.textContent = "Player 1 wins!"
@@ -41,6 +59,7 @@ p1_button.addEventListener("click", function(){
 // Player 2 button functionality
 p2_button.addEventListener("click", function(){
     if(!game_over){
+        winning_score_input.disabled = true;
         p2_score++;
         p2_score_display.textContent = p2_score;
         if(p2_score === winning_score){
@@ -49,18 +68,4 @@ p2_button.addEventListener("click", function(){
             game_over = true;
         }
     }
-});
-
-// Resetting after game over
-reset_button.addEventListener("click", function(){
-    p1_score = 0;
-    p2_score = 0;
-    winning_score = 5;
-    winning_score_input.value = winning_score;
-    p1_score_display.textContent = p1_score;
-    p2_score_display.textContent = p2_score;
-    p1_score_display.classList.remove("green");
-    p2_score_display.classList.remove("green");
-    msg_box.innerHTML = "Playing to <span id=\"winning_score_display\">" + winning_score + "</span>";
-    game_over = false;
 });
