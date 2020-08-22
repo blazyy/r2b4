@@ -52,6 +52,7 @@ p1_button.addEventListener("click", function(){
             p1_score_display.classList.add("green");
             msg_box.textContent = "Player 1 wins!"
             game_over = true;
+            winning_score_input.disabled = true;
         }
     }
 });
@@ -66,6 +67,7 @@ p2_button.addEventListener("click", function(){
             p2_score_display.classList.add("green");
             msg_box.textContent = "Player 2 wins!"
             game_over = true;
+            winning_score_input.disabled = true;
         }
     }
 });
