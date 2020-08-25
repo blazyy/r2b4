@@ -1,0 +1,16 @@
+{
+  "name": "post_requests",
+  "version": "1.0.0",
+  "description": "A demo app to practice working with post requests.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Faaez Razeen",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  }
+}
