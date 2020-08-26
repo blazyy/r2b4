@@ -1,13 +1,13 @@
 // https://www.omdbapi.com/?s=interstellar&apikey=2fc25eac
 const express = require('express');
 const axios = require('axios');
-const body_parser = require("body-parser");
+// const body_parser = require("body-parser");
 const app = express();
 const API_KEY = '2fc25eac';
 
-app.use(body_parser.urlencoded({
-    extended: true
-}));
+// app.use(body_parser.urlencoded({
+//     extended: true
+// }));``
 
 app.set('view engine', 'ejs');
 
