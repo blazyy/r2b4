@@ -15,27 +15,22 @@ app.get("/", function(req, res) {
     res.render("home");
 });
 
-app.post("/search", function(req, res) {
-    let query_url = 'https://www.omdbapi.com/?s=' + req.body.movie_name + '&apikey=' + API_KEY;
-    let movies = [];
+app.get("/search", function(req, res) {
+    let query_url = 'https://www.omdbapi.com/?s=' + req.query.movie_name + '&apikey=' + API_KEY;
     axios.get(query_url)
         .then(function(response) {
             if(!response.data['Search']){
-                res.send("No movies found with that name! 🙁");
+                res.send("No movies found with that name! 🙁 <br> <a href='/'>Go back</a>");
             }
             else{
-                response.data['Search'].forEach(function(movie) {
-                    movies.push(movie['Title']);
+                movies = response.data['Search'];
+                res.render("movies", {
+                    movies: movies
                 });
             }
         })
         .catch(function(error) {
             console.log(error);
-        })
-        .then(function() {
-            res.render("movies", {
-                movies: movies
-            });
         });
 });
 

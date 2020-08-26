@@ -1,4 +1,7 @@
 <h1>Movies 🎥</h1>
-<% movies.forEach(function(movie){ %>
-    <li> <%= movie %> </li>
-<% }); %>
+<ul>
+    <% movies.forEach(function(movie){ %>
+        <li> <%= movie['Title'] %> - <%= movie['Year'] %> </li>
+    <% }); %>
+</ul>
+<a href="/">Go back</a>
