@@ -4,7 +4,7 @@ var body_parser = require("body-parser");
 const friends = ['Harry', 'Larry', 'Barry', 'Carrie', 'Mary'];
 
 
-// app.use(express.static("public"));
+app.use(express.static("public"));
 app.use(body_parser.urlencoded({extended: true})); // needed to extract values from the req.body object in a POST request and store into a JS variable. without this it'll just be undefined.
 
 app.set("view engine", "ejs");
