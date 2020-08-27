@@ -1,0 +1,28 @@
+<%- include("partials/header") %>
+
+<div class="container">
+    <header class="jumbotron p-5">
+        <h1 class="display-4">🏕 Welcome To SpaceCamp!</h1>
+        <p class="lead">View our campgrounds from all over the universe.</p>
+        <p>
+            <a class="btn btn-primary" href="/campgrounds/new">Add New Campground</a>
+        </p>
+    </header>
+
+    <div class="row">
+        <% campgrounds.forEach(function(campground){ %>
+        <div class="col-md-3 col-sm-6">
+            <div class="card p-0 text-center">
+                <img class="card-img-top" src="<%= campground.image %>">
+                <div class="card-body pb-2">
+                    <h5 class="card-title"><%= campground.name %></h5>
+                    <a href="/campgrounds/<%=campground._id%>" class="btn btn-primary">More Info</a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+
+</div>
+
+<%- include("partials/footer") %>
