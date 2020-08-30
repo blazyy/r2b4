@@ -9,6 +9,10 @@ const express = require('express'),
     User = require('./models/user'),
     seedDB = require('./seeds');
 
+const campground_routes = require('./routes/campgrounds'),
+    comment_routes = require('./routes/comments'),
+    index_routes = require('./routes/index');
+
 mongoose.connect('mongodb://localhost:27017/space_camp', {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -18,13 +22,14 @@ mongoose.connect('mongodb://localhost:27017/space_camp', {
 
 app.use(body_parser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
-seedDB();
+//seedDB();
 
 app.use(require('express-session')({
     secret: 'Cattus Maximillian',
     resave: false,
     saveUninitialized: false
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -42,134 +47,12 @@ app.use(function(req, res, next){
     next();
 });
 
-app.get('/', function(req, res) {
-    res.render('landing');
-});
 
-// INDEX
-app.get('/campgrounds', function(req, res) {
-    Campground.find({}, function(err, campgrounds_from_database) {
-        if (err) {
-            console.log(error);
-        } else {
-            res.render('campgrounds/index', {
-                campgrounds: campgrounds_from_database
-            });
-        }
-    });
-});
-
-// NEW - campground
-app.get('/campgrounds/new', function(req, res) {
-    res.render('campgrounds/new');
-});
-
-// CREATE - campground
-app.post('/campgrounds', function(req, res) {
-    let new_campground = {
-        name: req.body.camp_name,
-        image: req.body.camp_img_url,
-        description: req.body.camp_description
-    };
-    Campground.create(new_campground, function(err, new_campground) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.redirect('/campgrounds');
-        }
-    });
-});
-
-// SHOW
-app.get('/campgrounds/:id', function(req, res) {
-    // The .populate('comments').exec() here just replaces the comment references with the actual content
-    // of the comments themselves so that these can be sent as an object to the /show.js page
-    Campground.findById(req.params.id).populate('comments').exec(function(err, found_campground) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('campgrounds/show', {
-                campground: found_campground
-            });
-        }
-    });
-});
-
-// NEW - comment
-app.get('/campgrounds/:id/comments/new', isLoggedIn, function(req, res){
-    Campground.findById(req.params.id, function(err, found_campground){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render('comments/new', {campground: found_campground});
-        }
-    });
-});
-
-app.post('/campgrounds/:id/comments', isLoggedIn, function(req, res){
-    Campground.findById(req.params.id, function(err, found_campground){
-        if(err){
-            console.log(err);
-        } else{
-            Comment.create(req.body.comment, function(err, new_comment){
-                if(err){
-                    console.log(err);
-                } else{
-                    found_campground.comments.push(new_comment);
-                    found_campground.save();
-                    res.redirect('/campgrounds/' + found_campground._id);
-                }
-            });
-        }
-    });
-});
-
-// Register
-app.get('/register', function(req, res){
-    res.render('register');
-});
-
-app.post('/register', function(req, res){
-    let new_user = new User({username: req.body.username});
-    User.register(new_user, req.body.password, function(err, new_user){
-        if(err){
-            console.log(err);
-        }
-        else{
-            passport.authenticate('local')(req, res, function(){
-                res.redirect('/campgrounds');
-            });
-        }
-    });
-});
-
-app.get('/login', function(req, res){
-    res.render('login');
-});
-
-// passport.authenticate() is the middleware
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/campgrounds',
-    failureRedirect: '/login'
-}));
-
-app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/campgrounds');
-});
-
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('/login');
-}
-
-// CREATE - comment
-app.get('*', function(req, res) {
-    res.send('It seems you are lost! 🥱 <br> <a href='/'>Go Back</a>');
-});
+// Note to self: changing the order of the 3 lines below messed things
+// up. Idk why.
+app.use('/campgrounds', campground_routes); // can remove "/campgrounds" prefix in campground routes if specified here.
+app.use('/campgrounds/:id/comments', comment_routes); // same
+app.use(index_routes);
 
 app.listen(3000, function(req, res) {
     console.log('Server listening on port 3000...');

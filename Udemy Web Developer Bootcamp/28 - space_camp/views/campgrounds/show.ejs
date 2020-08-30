@@ -19,6 +19,7 @@
                         <p class="card-text text-right">$9.00/night</p>
                     </div>
                     <p class="card-text"><%= campground.description %></p>
+                    <h6 class="card-subtitle mb-2 text-muted"><em>Added By <%= campground.author.username %></em></h6>
                 </div>
             </div>
                 <div class="card bg-light p-3">
@@ -30,7 +31,7 @@
                         <div class="row">
                             <div class="col-md-12 card-body">
                                 <div class="d-flex justify-content-between">
-                                    <p><strong><%= comment.author %></strong></p>
+                                    <p><strong><%= comment.author.username %></strong></p>
                                     <p class="text-right"><em>10 days ago</em></p>
                                 </div>
                                 <p><%= comment.text %></p>
