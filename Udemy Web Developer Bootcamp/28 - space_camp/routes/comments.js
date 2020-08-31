@@ -1,22 +1,24 @@
 const express = require('express'),
     router = express.Router({mergeParams: true}), // to enable the req object to be read, if this option isn't specified then no objects will be passed
     Campground = require('../models/campground'),
-    Comment = require('../models/comment');
+    Comment = require('../models/comment'),
+    middleware = require('../middleware');
 
 // NEW - comment
-router.get('/new', isLoggedIn, function(req, res){
+router.get('/new', middleware.is_logged_in, function(req, res){
     Campground.findById(req.params.id, function(err, found_campground){
-        if(err){
+        if (err || !found_campground) {
             console.log(err);
-        }
-        else{
+            req.flash('error', 'That campground does not exist.');
+            res.redirect('/campgrounds');
+        } else {
             res.render('comments/new', {campground: found_campground});
         }
     });
 });
 
 // CREATE - comment
-router.post('/', isLoggedIn, function(req, res){
+router.post('/', middleware.is_logged_in, function(req, res){
     Campground.findById(req.params.id, function(err, found_campground){
         if(err){
             console.log(err);
@@ -30,6 +32,7 @@ router.post('/', isLoggedIn, function(req, res){
                     new_comment.save();
                     found_campground.comments.push(new_comment);
                     found_campground.save();
+                    req.flash('success', 'Added new comment.');
                     res.redirect('/campgrounds/' + found_campground._id);
                 }
             });
@@ -37,11 +40,42 @@ router.post('/', isLoggedIn, function(req, res){
     });
 });
 
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('/login');
-}
+// EDIT
+router.get('/:comment_id/edit', middleware.check_comment_ownership, function(req, res){
+    Comment.findById(req.params.comment_id, function(err, found_comment){
+        if (err || !found_comment) {
+            console.log(err);
+            req.flash('error', 'That comment does not exist.');
+            res.redirect('/campgrounds/' + req.params.id);
+        } else {
+            res.render('comments/edit', {campground_id: req.params.id, comment: found_comment});
+        }
+    });
+});
+
+// UPDATE
+router.put('/:comment_id', middleware.check_comment_ownership, function(req, res){
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updated_comment){
+        if(err){
+            res.redirect('back');
+        } else{
+            req.flash('success', 'Updated comment.');
+            res.redirect('/campgrounds/' + req.params.id);
+        }
+    });
+});
+
+// DESTROY
+router.delete('/:comment_id', middleware.check_comment_ownership, function(req, res){
+    Comment.findByIdAndRemove(req.params.comment_id, function(err){
+        if(err){
+            req.flash('error', 'Something went wrong.');
+            res.redirect('back');
+        } else{
+            req.flash('success', 'Deleted comment.');
+            res.redirect('back');
+        }
+    })
+});
 
 module.exports = router;

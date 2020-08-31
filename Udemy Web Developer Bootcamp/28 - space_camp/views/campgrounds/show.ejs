@@ -20,6 +20,12 @@
                     </div>
                     <p class="card-text"><%= campground.description %></p>
                     <h6 class="card-subtitle mb-2 text-muted"><em>Added By <%= campground.author.username %></em></h6>
+                    <% if(current_user && campground.author.id.equals(current_user._id)) {%>
+                        <a href="<%= campground._id %>/edit" class="btn btn-warning mt-2">Edit</a>
+                        <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post" style="display: inline">
+                            <button class="btn btn-danger mt-2">Delete</button>
+                        </form>
+                    <% } %>
                 </div>
             </div>
                 <div class="card bg-light p-3">
@@ -35,6 +41,15 @@
                                     <p class="text-right"><em>10 days ago</em></p>
                                 </div>
                                 <p><%= comment.text %></p>
+                                <% if(current_user && comment.author.id.equals(current_user._id)) {%>
+                                    <a href="/campgrounds/<%= campground._id%>/comments/<%= comment._id %>/edit" class="btn btn-sm btn-warning">
+                                        Edit
+                                    </a>
+                                    <%# Anchor tags only make get requests. Since we need post, form is used below %>
+                                    <form action="/campgrounds/<%= campground._id%>/comments/<%= comment._id %>?_method=delete" method="post" style="display: inline">
+                                        <input type="submit" class="btn btn-sm btn-danger" value="Delete"></input>
+                                    </form>
+                                <% } %>
                             </div>
                         </div>
                     <% }); %>
@@ -42,7 +57,5 @@
         </div>
     </div>
 </div>
-
-
 
 <%- include("../partials/footer") %>

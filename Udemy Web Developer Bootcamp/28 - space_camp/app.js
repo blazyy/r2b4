@@ -2,8 +2,10 @@ const express = require('express'),
     app = express(),
     body_parser = require('body-parser'),
     mongoose = require('mongoose'),
+    flash = require('connect-flash'),
     passport = require('passport'),
-    LocalStrategy = require('passport-local'),
+    local_strategy = require('passport-local'),
+    method_override = require('method-override');
     Comment = require('./models/comment'),
     Campground = require('./models/campground'),
     User = require('./models/user'),
@@ -32,9 +34,11 @@ app.use(require('express-session')({
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
+passport.use(new local_strategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+app.use(method_override('_method'));
+app.use(flash());
 
 // The function below is a middleware that passes the current_user (if logged in)
 // to every .ejs template. We don't have to manually send it in the object in the
@@ -42,8 +46,12 @@ passport.deserializeUser(User.deserializeUser());
 // and the navbar needs to know if a user is logged in or not to display or
 // hide any respective options
 
+// Passes current_user and flash messages to every single template,
+// this way we don't have to send as an object to each template individually.
 app.use(function(req, res, next){
     res.locals.current_user = req.user; // req.user is from PassportJS
+    res.locals.error = req.flash('error'); // the 'error' is merely a key for connect-flash alerts. not plaintext
+    res.locals.success = req.flash('success'); // same here
     next();
 });
 

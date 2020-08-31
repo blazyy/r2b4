@@ -16,10 +16,12 @@ router.post('/register', function(req, res){
     let new_user = new User({username: req.body.username});
     User.register(new_user, req.body.password, function(err, new_user){
         if(err){
-            console.log(err);
+            req.flash('error', err.message + "!");
+            res.redirect('/register');
         }
         else{
             passport.authenticate('local')(req, res, function(){
+                req.flash('success', 'Welcome to SpaceCamp, ' + new_user.username + "!");
                 res.redirect('/campgrounds');
             });
         }
@@ -45,12 +47,5 @@ router.get('/logout', function(req, res){
 router.get('*', function(req, res) {
     res.sendStatus(404);
 });
-
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('/login');
-}
 
 module.exports = router;
