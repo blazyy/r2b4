@@ -18,6 +18,9 @@
                     <div class="form-group">
                         <input type="number" name="camp[price]" step=".01" class="form-control" value="<%= campground.price %>" required>
                     </div>
+                    <div class="form-group">
+                        <input type="text" name="camp[location]" class="form-control" value="<%= campground.location %>" required>
+                    </div>
                     <button type="submit" class="btn btn-primary btn-block">Submit</button>
                 </form>
                 <a class="btn btn-secondary btn-block mt-3" href="/campgrounds">Go Back</a>

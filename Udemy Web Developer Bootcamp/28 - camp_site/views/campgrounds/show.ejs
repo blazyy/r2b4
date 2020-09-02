@@ -1,6 +1,8 @@
 <%- include("../partials/header") %>
 
 <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+<script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 
 <div class="container">
@@ -23,6 +25,8 @@
                         <h5 class="card-title"><a href="#"><%= campground.name %></a></h5>
                         <p class="card-text text-right">$<%= campground.price.toFixed(2) %>/night</p>
                     </div>
+                    <p class="card-subtitle text-muted text-left"><%= campground.location %></p>
+                    <hr>
                     <p class="card-text"><%= campground.description %></p>
                     <p class="card-text mb-2 text-muted"><em>Added By <strong><%= campground.author.username %></strong>, <%= moment(campground.time).toNow(true) %> ago</em></p>
                     <% if(current_user && campground.author.id.equals(current_user._id)) {%>
@@ -53,7 +57,7 @@
                                 milliseconds between the objectID timestamp and the time attribute
                             %>
                             <% if(moment(comment.time).diff(moment(comment._id.getTimestamp()), 'seconds') !== 0){ %>
-                                <em class="text-muted">(edited)</em>
+                            <em class="text-muted">(edited)</em>
                             <% } %>
                         </p>
                         <% if(current_user && comment.author.id.equals(current_user._id)) {%>
@@ -75,12 +79,34 @@
 
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYmxhenl5IiwiYSI6ImNrZWp6aGp0NDJiazcyc2x0OWI2bHhpemwifQ.GkKXJiZ59bQGd-ie4X0PJw';
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-        center: [-74.5, 40], // starting position [lng, lat]
-        zoom: 9 // starting zoom
+    var mapboxClient = mapboxSdk({
+        accessToken: mapboxgl.accessToken
     });
+    mapboxClient.geocoding
+        .forwardGeocode({
+            query: '<%= campground.location %>',
+            autocomplete: false,
+            limit: 1
+        })
+        .send()
+        .then(function(response) {
+            if (
+                response &&
+                response.body &&
+                response.body.features &&
+                response.body.features.length
+            ) {
+                var feature = response.body.features[0];
+
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: feature.center,
+                    zoom: 10
+                });
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            }
+        });
 </script>
 
 <%- include("../partials/footer") %>

@@ -51,7 +51,7 @@ router.get('/:id', function(req, res) {
             // console.log(mapboxgl);
             res.render('campgrounds/show', {
                 campground: found_campground,
-                moment: moment
+                moment: moment,
             });
         }
     });
