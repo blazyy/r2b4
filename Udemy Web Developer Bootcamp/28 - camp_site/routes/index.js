@@ -2,9 +2,11 @@ const express = require('express'),
     router = express.Router(),
     passport = require('passport'),
     User = require('../models/user')
-async = require('async'),
+    async = require('async'),
     nodemailer = require('nodemailer'),
     crypto = require('crypto');
+
+require('dotenv').config({path: 'requires.env'});
 
 router.get('/', function(req, res) {
     res.render('landing');
@@ -16,12 +18,14 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
+    console.log(User.find({username: "chungusmaximusdsdsdiggus"}));
     let new_user = new User({
         username: req.body.username,
         email: req.body.email
     });
     User.register(new_user, req.body.password, function(err, new_user) {
         if (err) {
+            console.log(err.keyValue);
             req.flash('error', err.message + "!");
             res.redirect('/register');
         } else {
@@ -40,7 +44,8 @@ router.get('/login', function(req, res) {
 // passport.authenticate() is the middleware
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/campgrounds',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    failureFlash: true
 }));
 
 router.get('/logout', function(req, res) {
@@ -52,19 +57,6 @@ router.get('/logout', function(req, res) {
 router.get('/forgot', function(req, res) {
     res.render('forgot');
 });
-
-// router.post('/forgot', function(req, res) {
-//     let transporter = nodemailer.createTransport(options[, defaults]);
-//     transporter.verify(function(error, success) {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             console.log("Server is ready to take our messages");
-//         }
-//     });
-// req.flash('success', 'A password reset link will be sent to ' + req.body.email + '. If it exists.');
-// res.redirect('/campgrounds');
-// });
 
 router.post('/forgot', function(req, res, next) {
     async.waterfall([
@@ -79,7 +71,7 @@ router.post('/forgot', function(req, res, next) {
                 email: req.body.email
             }, function(err, user) {
                 if (!user) {
-                    req.flash('success', 'A password reset link will be sent to ' + req.body.email + '. If it exists. (Check your spam folder!)');
+                    req.flash('success', 'A password reset link will be sent to ' + req.body.email + '. If it exists. Check your spam folder!');
                     res.redirect('/campgrounds');
                 }
                 user.reset_pw_token = token;
@@ -94,7 +86,7 @@ router.post('/forgot', function(req, res, next) {
                 service: 'Gmail',
                 auth: {
                     user: 'campsitefaaez@gmail.com',
-                    pass: 'campsite123!'
+                    pass: process.env['MGWP']
                 }
             });
             var mailOptions = {
@@ -110,7 +102,7 @@ router.post('/forgot', function(req, res, next) {
                 if (err) {
                     console.log(err);
                 } else {
-                    req.flash('success', 'A password reset link will be sent to ' + req.body.email + '. If it exists.');
+                    req.flash('success', 'A password reset link will be sent to ' + req.body.email + '. If it exists. Check your spam folder!');
                     res.redirect('/campgrounds');
                 }
             });
@@ -171,16 +163,16 @@ router.post('/reset/:token', function(req, res) {
             var smtpTransport = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
-                    user: 'learntocodeinfo@gmail.com',
-                    pass: process.env.GMAILPW
+                    user: 'campsitefaaez@gmail.com',
+                    pass: process.env['MGWP']
                 }
             });
             var mailOptions = {
                 to: user.email,
-                from: 'learntocodeinfo@mail.com',
-                subject: 'Your password has been changed',
+                from: 'campsitefaaez@gmail.com',
+                subject: 'Your password for CampSite™ has been changed',
                 text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+                    'This is a confirmation that the password for your account ' + user.email + ' on CampSite™ has just been changed.\n'
             };
             smtpTransport.sendMail(mailOptions, function(err) {
                 req.flash('success', 'Success! Your password has been changed.');
