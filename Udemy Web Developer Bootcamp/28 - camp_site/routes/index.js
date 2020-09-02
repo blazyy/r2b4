@@ -43,6 +43,10 @@ router.get('/logout', function(req, res){
     res.redirect('/campgrounds');
 });
 
+router.get('/forgot', function(req, res){
+    res.render('forgot');
+});
+
 // CREATE - comment
 router.get('*', function(req, res) {
     res.sendStatus(404);
