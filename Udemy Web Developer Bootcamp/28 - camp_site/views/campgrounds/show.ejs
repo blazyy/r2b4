@@ -1,14 +1,16 @@
 <%- include("../partials/header") %>
 
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <p class="lead">SpaceCamp 🚀</p>
             <div class="list-group">
                 <li class="list-group-item active">info1</li>
                 <li class="list-group-item">info2</li>
-                <li class="list-group-item">
-                    <div id="map-container" style='height: 400px; width: 400px'>
+                <li class="list-group-item p-0">
+                    <div id="map">
                     </div>
                 </li>
             </div>
@@ -22,7 +24,7 @@
                         <p class="card-text text-right">$<%= campground.price.toFixed(2) %>/night</p>
                     </div>
                     <p class="card-text"><%= campground.description %></p>
-                    <h6 class="card-subtitle mb-2 text-muted"><em>Added By <%= campground.author.username %></em></h6>
+                    <p class="card-text mb-2 text-muted"><em>Added By <strong><%= campground.author.username %></strong>, <%= moment(campground.time).toNow(true) %> ago</em></p>
                     <% if(current_user && campground.author.id.equals(current_user._id)) {%>
                     <a href="<%= campground._id %>/edit" class="btn btn-warning mt-2">Edit</a>
                     <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post" style="display: inline">
@@ -71,14 +73,14 @@
     </div>
 </div>
 
-<%#
-mapboxgl.accessToken = 'pk.eyJ1IjoiYmxhenl5IiwiYSI6ImNrZWp6aGp0NDJiazcyc2x0OWI2bHhpemwifQ.GkKXJiZ59bQGd-ie4X0PJw';
-const map = new mapboxgl.Map({
-    container: 'map-container',
-    style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-    center: [-74.5, 40], // starting position [lng, lat]
-    zoom: 9 // starting zoom
-});
-%>
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmxhenl5IiwiYSI6ImNrZWp6aGp0NDJiazcyc2x0OWI2bHhpemwifQ.GkKXJiZ59bQGd-ie4X0PJw';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+        center: [-74.5, 40], // starting position [lng, lat]
+        zoom: 9 // starting zoom
+    });
+</script>
 
 <%- include("../partials/footer") %>

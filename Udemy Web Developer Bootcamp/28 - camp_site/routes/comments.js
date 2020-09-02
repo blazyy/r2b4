@@ -30,7 +30,6 @@ router.post('/', middleware.is_logged_in, function(req, res){
                 } else{
                     new_comment.author.id = req.user._id; // req.user from PassportJS? I think so.
                     new_comment.author.username = req.user.username;
-                    new_comment.time = moment();
                     new_comment.save();
                     found_campground.comments.push(new_comment);
                     found_campground.save();

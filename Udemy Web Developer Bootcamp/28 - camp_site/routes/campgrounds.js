@@ -2,8 +2,7 @@ const express = require('express'),
     router = express.Router(),
     Campground = require('../models/campground'),
     middleware = require('../middleware'),
-    moment = require('moment'),
-    mapboxgl = require('mapbox-gl');
+    moment = require('moment');
 
 // INDEX
 router.get('/', function(req, res) {
@@ -52,8 +51,7 @@ router.get('/:id', function(req, res) {
             // console.log(mapboxgl);
             res.render('campgrounds/show', {
                 campground: found_campground,
-                moment: moment,
-                mapboxgl: mapboxgl
+                moment: moment
             });
         }
     });

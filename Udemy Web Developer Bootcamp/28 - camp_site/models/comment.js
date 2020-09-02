@@ -9,7 +9,10 @@ const comment_schema = mongoose.Schema({
         },
         username: String
     },
-    time: mongoose.Schema.Types.Date
+    time: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 module.exports = mongoose.model('comment', comment_schema);
