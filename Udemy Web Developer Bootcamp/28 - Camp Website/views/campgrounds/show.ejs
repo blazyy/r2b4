@@ -47,17 +47,17 @@
             </div>
             <div class="card bg-light p-3">
                 <div class="text-right">
-                    <a href="<%= campground._id %>/comments/new" class="btn btn-info">Add Comment</a>
+                    <a href="<%= campground._id %>/reviews/new" class="btn btn-info">Add Review</a>
                 </div>
                 <hr>
-                <% campground.comments.forEach(function(comment){ %>
+                <% campground.reviews.forEach(function(review){ %>
                 <div class="row">
                     <div class="col-md-12 card-body">
                         <div class="d-flex justify-content-between">
-                            <p><strong><%= comment.author.username %></strong></p>
+                            <p><strong><%= review.author.username %></strong></p>
                             <div>
                                 <% let stars = 0 %>
-                                <% while(stars < comment.rating) { %>
+                                <% while(stars < review.rating) { %>
                                     <i class="fas fa-star"></i>
                                         <% stars++ %>
                                 <%  } %>
@@ -69,19 +69,19 @@
                         </div>
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <%= comment.text %>
-                                    <% if(moment(comment.time).diff(moment(comment._id.getTimestamp()), 'seconds') !== 0){ %>
+                                    <%= review.text %>
+                                    <% if(moment(review.time).diff(moment(review._id.getTimestamp()), 'seconds') !== 0){ %>
                                         <em class="text-muted">(edited)</em>
                                     <% } %>
                                 </div>
-                                <p class="text-right"><em><%= moment(comment.time).toNow(true); %> ago</em></p>
+                                <p class="text-right"><em><%= moment(review.time).toNow(true); %> ago</em></p>
                             </div>
-                        <% if(current_user && comment.author.id.equals(current_user._id)) {%>
-                        <a href="/campgrounds/<%= campground._id%>/comments/<%= comment._id %>/edit" class="btn btn-sm btn-warning">
+                        <% if(current_user && review.author.id.equals(current_user._id)) {%>
+                        <a href="/campgrounds/<%= campground._id%>/reviews/<%= review._id %>/edit" class="btn btn-sm btn-warning">
                             Edit
                         </a>
                         <%# Anchor tags only make get requests. Since we need post, form is used below %>
-                        <form action="/campgrounds/<%= campground._id%>/comments/<%= comment._id %>?_method=delete" method="post" style="display: inline">
+                        <form action="/campgrounds/<%= campground._id%>/reviews/<%= review._id %>?_method=delete" method="post" style="display: inline">
                             <input type="submit" class="btn btn-sm btn-danger" value="Delete"></input>
                         </form>
                         <% } %>

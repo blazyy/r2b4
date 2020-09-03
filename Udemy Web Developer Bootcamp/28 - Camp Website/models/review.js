@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const comment_schema = mongoose.Schema({
+const review_schema = mongoose.Schema({
     text: String,
     author: {
         id: {
@@ -16,4 +16,4 @@ const comment_schema = mongoose.Schema({
     rating: Number
 })
 
-module.exports = mongoose.model('comment', comment_schema);
+module.exports = mongoose.model('review', review_schema);

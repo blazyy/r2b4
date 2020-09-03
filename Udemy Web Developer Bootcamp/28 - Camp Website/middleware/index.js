@@ -1,5 +1,5 @@
 const Campground = require('../models/campground'),
-    Comment = require('../models/comment');
+    Review = require('../models/review');
 
 const middleware_object = {
     check_campground_ownership: function(req, res, next) {
@@ -26,16 +26,16 @@ const middleware_object = {
         }
     },
 
-    check_comment_ownership: function(req, res, next) {
+    check_review_ownership: function(req, res, next) {
         if (req.isAuthenticated()) { // check is user is logged in
-            Comment.findById(req.params.comment_id, function(err, found_comment) {
-                if (err || !found_comment) {
+            Review.findById(req.params.review_id, function(err, found_review) {
+                if (err || !found_review) {
                     console.log(err);
-                    req.flash('error', 'That comment does not exist.');
+                    req.flash('error', 'That review does not exist.');
                     res.redirect('/campgrounds/' + req.params.id);
                 } else {
                     // not using === because author.id is mongoose object and req.user._id is a string
-                    if (found_comment.author.id.equals(req.user._id)) { // does user own the comment?
+                    if (found_review.author.id.equals(req.user._id)) { // does user own the review?
                         next();
                     } else {
                         req.flash('error', 'You don\'t have permission to do that!');

@@ -6,13 +6,13 @@ const express = require('express'),
     passport = require('passport'),
     local_strategy = require('passport-local'),
     method_override = require('method-override');
-    Comment = require('./models/comment'),
+    Review = require('./models/review'),
     Campground = require('./models/campground'),
-    User = require('./models/user'),
-    seedDB = require('./seeds');
+    User = require('./models/user');
+    // seedDB = require('./seeds');
 
 const campground_routes = require('./routes/campgrounds'),
-    comment_routes = require('./routes/comments'),
+    review_routes = require('./routes/reviews'),
     index_routes = require('./routes/index');
 
 mongoose.connect('mongodb://localhost:27017/campsite', {
@@ -60,7 +60,7 @@ app.use(function(req, res, next){
 // Note to self: changing the order of the 3 lines below messed things
 // up. Idk why.
 app.use('/campgrounds', campground_routes); // can remove "/campgrounds" prefix in campground routes if specified here.
-app.use('/campgrounds/:id/comments', comment_routes); // same
+app.use('/campgrounds/:id/reviews', review_routes); // same
 app.use(index_routes);
 app.listen(3000, function(req, res) {
     console.log('Server listening on port 3000...');

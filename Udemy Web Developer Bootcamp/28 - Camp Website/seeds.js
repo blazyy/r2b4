@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const campground_model = require("./models/campground");
-const comment_model = require("./models/comment");
+const review_model = require("./models/review");
 
 var data = [{
         name: "Cloud's Rest",
@@ -26,11 +26,11 @@ function seedDB() {
             console.log(err);
         }
         console.log("removed campgrounds!");
-        comment_model.remove({}, function(err) {
+        review_model.remove({}, function(err) {
             if (err) {
                 console.log(err);
             }
-            console.log("removed comments!");
+            console.log("removed reviews!");
             //add a few campgrounds
             data.forEach(function(seed) {
                 campground_model.create(seed, function(err, campground) {
@@ -38,17 +38,17 @@ function seedDB() {
                         console.log(err)
                     } else {
                         console.log("added a campground");
-                        //create a comment
-                        comment_model.create({
+                        //create a review
+                        review_model.create({
                             text: "This place is great, but I wish there was internet",
                             author: "Homer"
-                        }, function(err, comment) {
+                        }, function(err, review) {
                             if (err) {
                                 console.log(err);
                             } else {
-                                campground.comments.push(comment);
+                                campground.reviews.push(review);
                                 campground.save();
-                                console.log("Created new comment");
+                                console.log("Created new review");
                             }
                         });
                     }
@@ -56,7 +56,7 @@ function seedDB() {
             });
         });
     });
-    //add a few comments
+    //add a few reviews
 }
 
 module.exports = seedDB;

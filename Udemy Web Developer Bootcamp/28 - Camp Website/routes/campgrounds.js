@@ -42,9 +42,9 @@ router.post('/', middleware.is_logged_in, function(req, res) {
 
 // SHOW
 router.get('/:id', function(req, res) {
-    // The .populate('comments').exec() here just replaces the comment references with the actual content
-    // of the comments themselves so that these can be sent as an object to the /show.js page
-    Campground.findById(req.params.id).populate('comments').exec(function(err, found_campground) {
+    // The .populate('reviews').exec() here just replaces the review references with the actual content
+    // of the reviews themselves so that these can be sent as an object to the /show.js page
+    Campground.findById(req.params.id).populate('reviews').exec(function(err, found_campground) {
         if (err || !found_campground) {
             console.log(err);
             req.flash('error', 'That campground does not exist.');
@@ -97,9 +97,9 @@ router.delete('/:id', middleware.check_campground_ownership, function(req, res) 
         if (err) {
             console.log(err);
         }
-        Comment.deleteMany({
+        Review.deleteMany({
             _id: {
-                $in: removed_campground.comments
+                $in: removed_campground.reviews
             }
         }, (err) => {
             if (err) {
