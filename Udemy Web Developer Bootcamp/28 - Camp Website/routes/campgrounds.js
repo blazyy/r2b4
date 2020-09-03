@@ -2,7 +2,8 @@ const express = require('express'),
     router = express.Router(),
     Campground = require('../models/campground'),
     middleware = require('../middleware'),
-    moment = require('moment');
+    moment = require('moment'),
+    axios = require('axios');;
 
 // INDEX
 router.get('/', function(req, res) {
@@ -49,11 +50,17 @@ router.get('/:id', function(req, res) {
             req.flash('error', 'That campground does not exist.');
             res.redirect('/campgrounds');
         } else {
-            // console.log(mapboxgl);
-            res.render('campgrounds/show', {
-                campground: found_campground,
-                moment: moment,
-            });
+            axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + found_campground.location + '&appid=2ffbce013df10d002c54c0a6ecf3f5cf')
+                .then(function(response) {
+                    res.render('campgrounds/show', {
+                        campground: found_campground,
+                        moment: moment,
+                        weather: response.data
+                    });
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
         }
     });
 });
@@ -90,7 +97,11 @@ router.delete('/:id', middleware.check_campground_ownership, function(req, res) 
         if (err) {
             console.log(err);
         }
-        Comment.deleteMany( {_id: { $in: removed_campground.comments } }, (err) => {
+        Comment.deleteMany({
+            _id: {
+                $in: removed_campground.comments
+            }
+        }, (err) => {
             if (err) {
                 console.log(err);
             }

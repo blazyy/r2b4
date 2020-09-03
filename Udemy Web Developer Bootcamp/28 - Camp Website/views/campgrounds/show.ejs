@@ -10,10 +10,14 @@
         <div class="col-md-3">
             <div class="list-group">
                 <li class="list-group-item active">info1</li>
-                <li class="list-group-item">info2</li>
+                <li id="weather-info" class="list-group-item">
+                    <% if(weather === 'undefined') {%>
+                        Weather Info Unavailable
+                    <% } else{ %>
+                        <%= weather.weather[0].description %>, <%= Math.round(weather.main.temp - 273.15) %>° C</li>
+                    <% } %>
                 <li class="list-group-item p-0">
-                    <div id="map">
-                    </div>
+                    <div id="map"></div>
                 </li>
             </div>
         </div>
