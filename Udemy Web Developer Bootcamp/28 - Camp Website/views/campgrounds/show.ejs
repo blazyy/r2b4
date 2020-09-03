@@ -1,5 +1,6 @@
 <%- include("../partials/header") %>
 
+<script src="https://kit.fontawesome.com/90c1f722b6.js" crossorigin="anonymous"></script>
 <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
 <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
 <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
@@ -18,6 +19,9 @@
                     <% } %>
                 <li class="list-group-item p-0">
                     <div id="map"></div>
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-map-marker-alt fa-fwv"></i> <%= campground.location %>
                 </li>
             </div>
         </div>
@@ -51,19 +55,27 @@
                     <div class="col-md-12 card-body">
                         <div class="d-flex justify-content-between">
                             <p><strong><%= comment.author.username %></strong></p>
-                            <p class="text-right"><em><%= moment(comment.time).toNow(true); %> ago</em></p>
+                            <div>
+                                <% let stars = 0 %>
+                                <% while(stars < comment.rating) { %>
+                                    <i class="fas fa-star"></i>
+                                        <% stars++ %>
+                                <%  } %>
+                                <% while(stars < 5) { %>
+                                    <i class="far fa-star"></i>
+                                        <% stars++ %>
+                                <%  } %>
+                            </div>
                         </div>
-                        <p>
-                            <%= comment.text %>
-                            <%#
-                                # If difference between comment creation date and time attribute is greater than one second,
-                                display '(edited)' at end of comment. 1 second because there was a slight delay in
-                                milliseconds between the objectID timestamp and the time attribute
-                            %>
-                            <% if(moment(comment.time).diff(moment(comment._id.getTimestamp()), 'seconds') !== 0){ %>
-                                <em class="text-muted">(edited)</em>
-                            <% } %>
-                        </p>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <%= comment.text %>
+                                    <% if(moment(comment.time).diff(moment(comment._id.getTimestamp()), 'seconds') !== 0){ %>
+                                        <em class="text-muted">(edited)</em>
+                                    <% } %>
+                                </div>
+                                <p class="text-right"><em><%= moment(comment.time).toNow(true); %> ago</em></p>
+                            </div>
                         <% if(current_user && comment.author.id.equals(current_user._id)) {%>
                         <a href="/campgrounds/<%= campground._id%>/comments/<%= comment._id %>/edit" class="btn btn-sm btn-warning">
                             Edit

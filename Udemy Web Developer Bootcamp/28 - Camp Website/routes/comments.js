@@ -13,7 +13,14 @@ router.get('/new', middleware.is_logged_in, function(req, res){
             req.flash('error', 'That campground does not exist.');
             res.redirect('/campgrounds');
         } else {
-            res.render('comments/new', {campground: found_campground});
+            Comment.find({"author.id": req.user._id}, function(err, found_comment){ // only allow one review per author
+                if(found_comment.length){
+                    req.flash('error', 'You can only post one review!');
+                    res.redirect('/campgrounds/' + found_campground._id);
+                } else{
+                    res.render('comments/new', {campground: found_campground});
+                }
+            })
         }
     });
 });

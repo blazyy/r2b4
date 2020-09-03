@@ -9,6 +9,12 @@
                     <div class="form-group">
                         <input type="text" name="comment[text]" class="form-control" value="<%= comment.text %>">
                     </div>
+                    <div class="d-flex justify-content-center">
+                        <p class="lead">Edit Rating (1-5)</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="range" name="comment[rating]" class="custom-range" min="1" max="5" value="<%= comment.rating %>" id="rating_slider">
+                    </div>
                     <button type="submit" class="btn btn-primary btn-block">Submit</button>
                 </form>
                 <a class="btn btn-secondary btn-block mt-3" href="/campgrounds/<%= campground_id %>">Go Back</a>

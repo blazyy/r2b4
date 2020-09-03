@@ -6,3 +6,7 @@
 #weather-info{
     text-transform: capitalize;
 }
+
+#rating_slider{
+    width: 100%;
+}
