@@ -50,7 +50,7 @@ router.get('/:id', function(req, res) {
             req.flash('error', 'That campground does not exist.');
             res.redirect('/campgrounds');
         } else {
-            axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + found_campground.location + '&appid=2ffbce013df10d002c54c0a6ecf3f5cf')
+            axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + found_campground.location + '&appid=' + process.env['OPEN_WEATHER_MAP_API_KEY'])
                 .then(function(response) {
                     res.render('campgrounds/show', {
                         campground: found_campground,

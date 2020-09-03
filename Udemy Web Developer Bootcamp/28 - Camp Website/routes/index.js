@@ -86,7 +86,7 @@ router.post('/forgot', function(req, res, next) {
                 service: 'Gmail',
                 auth: {
                     user: 'campsitefaaez@gmail.com',
-                    pass: process.env['MGWP']
+                    pass: process.env['GMAIL_PW']
                 }
             });
             var mailOptions = {
@@ -164,7 +164,7 @@ router.post('/reset/:token', function(req, res) {
                 service: 'Gmail',
                 auth: {
                     user: 'campsitefaaez@gmail.com',
-                    pass: process.env['MGWP']
+                    pass: process.env['GMAIL_PW']
                 }
             });
             var mailOptions = {
