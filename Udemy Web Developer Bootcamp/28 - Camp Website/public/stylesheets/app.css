@@ -10,3 +10,7 @@
 #rating_slider{
     width: 100%;
 }
+
+.fas, .far{
+    color: #ffc107;
+}

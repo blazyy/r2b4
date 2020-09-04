@@ -40,7 +40,12 @@
                                     <% stars++ %>
                             <%  } %>
                             <% if(stars < rating) { %>
-                                <i class="fas fa-star-half"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            <%  } %>
+                            <% stars++ %>
+                            <% while(stars < 5) { %>
+                                <i class="far fa-star"></i>
+                                    <% stars++ %>
                             <%  } %>
                         </h5>
                     <% } %>
