@@ -16,9 +16,10 @@ const campground_schema = new mongoose.Schema({
     reviews: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "review"
+            ref: 'review'
         }
     ],
+    avg_rating: Number,
     time: {
         type: Date,
         default: Date.now

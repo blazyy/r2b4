@@ -27,18 +27,21 @@ router.get('/new', middleware.is_logged_in, function(req, res){
 
 // CREATE - review
 router.post('/', middleware.is_logged_in, function(req, res){
-    Campground.findById(req.params.id, function(err, found_campground){
+    Campground.findById(req.params.id).populate('reviews').exec(function(err, found_campground){
         if(err){
-            console.log(err);
+            req.flash('error', 'That campground does not exist.');
+            res.redirect('/campgrounds');
         } else{
             Review.create(req.body.review, function(err, new_review){
                 if(err){
-                    console.log(err);
+                    req.flash('error', 'That review does not exist.');
+                    res.redirect('/campgrounds/' + found_campground._id);
                 } else{
                     new_review.author.id = req.user._id; // req.user from PassportJS? I think so.
                     new_review.author.username = req.user.username;
                     new_review.save();
                     found_campground.reviews.push(new_review);
+                    found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
                     found_campground.save();
                     req.flash('success', 'Added new review.');
                     res.redirect('/campgrounds/' + found_campground._id);
@@ -68,8 +71,17 @@ router.put('/:review_id', middleware.check_review_ownership, function(req, res){
         if(err){
             res.redirect('back');
         } else{
-            req.flash('success', 'Updated review.');
-            res.redirect('/campgrounds/' + req.params.id);
+            Campground.findById(req.params.id).populate('reviews').exec(function(err, found_campground){
+                if(err){
+                    req.flash('error', 'That campground does not exist.');
+                    res.redirect('/campgrounds');
+                } else{
+                    found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
+                    found_campground.save();
+                    req.flash('success', 'Updated review.');
+                    res.redirect('/campgrounds/' + req.params.id);
+                }
+            });
         }
     });
 });
@@ -81,10 +93,31 @@ router.delete('/:review_id', middleware.check_review_ownership, function(req, re
             req.flash('error', 'Something went wrong.');
             res.redirect('back');
         } else{
-            req.flash('success', 'Deleted review.');
-            res.redirect('back');
+            Campground.findById(req.params.id).populate('reviews').exec(function(err, found_campground){
+                if(err){
+                    req.flash('error', 'That campground does not exist.');
+                    res.redirect('/campgrounds');
+                } else{
+                    found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
+                    found_campground.save();
+                    req.flash('success', 'Deleted review.');
+                    res.redirect('back');
+                }
+            });
+
         }
     })
 });
+
+function calculate_avg_rating(reviews){
+    if(reviews.length === 0){
+        return 0;
+    }
+    let avg = 0;
+    reviews.forEach(function(review){
+        avg += review.rating;
+    });
+    return avg/reviews.length;
+}
 
 module.exports = router;

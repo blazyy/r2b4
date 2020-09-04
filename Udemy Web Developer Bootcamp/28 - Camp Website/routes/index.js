@@ -18,7 +18,6 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-    console.log(User.find({username: "chungusmaximusdsdsdiggus"}));
     let new_user = new User({
         username: req.body.username,
         email: req.body.email
