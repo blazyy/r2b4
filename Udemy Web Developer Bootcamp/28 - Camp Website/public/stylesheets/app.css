@@ -3,14 +3,14 @@
     width: 100%;
 }
 
-#weather-info{
+#weather-info {
     text-transform: capitalize;
 }
 
-#rating_slider{
+#rating_slider {
     width: 100%;
 }
 
-.fas, .far{
+.fa-star, .fa-star-half-alt {
     color: #ffc107;
 }
