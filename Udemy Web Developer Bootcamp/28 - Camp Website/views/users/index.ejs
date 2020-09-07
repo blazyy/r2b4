@@ -27,7 +27,11 @@
                 <% for(let i = 0; i < users.length; i++){ %>
                 <tr>
                     <th scope="row"><%= num %></th>
-                    <td><%= users[i].username %></td>
+                    <td>
+                        <a href="/users/<%= users[i].username %>">
+                            <%= users[i].username %>
+                        </a>
+                    </td>
                     <% if(users[i].campgrounds_added === 0){%>
                         <td>-</td>
                     <% } else {%>

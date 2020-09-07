@@ -47,16 +47,24 @@ router.post('/', function(req, res) {
 
 // SHOW
 router.get('/:username', function(req, res){
-    User.find({'username': req.params.username}, function(err, found_user){
-        console.log(found_user[0]);
+    User.findOne({'username': req.params.username}, function(err, found_user){
         if(err || !found_user){
             console.log(err);
             req.flash('error', 'That user does not exist.');
             res.redirect('/users');
         } else{
-            res.render('users/show', {
-                user: found_user
+            Campground.find({'author.username': req.params.username}, function(err, campgrounds_from_database) {
+                console.log(campgrounds_from_database);
+                if (err) {
+                    console.log(error);
+                } else {
+                    res.render('users/show', {
+                        user: found_user,
+                        campgrounds: campgrounds_from_database
+                    });
+                }
             });
+
         }
     });
 });
