@@ -2,13 +2,15 @@
 
 <script src="https://kit.fontawesome.com/90c1f722b6.js" crossorigin="anonymous"></script>
 
-<div class="container">
-    <header class="jumbotron p-5 mt-3">
-        <h1 class="display-4">🏕 Welcome To CampSite™</h1>
+<header class="jumbotron p-5 mt-3">
+    <div class="container">
+        <h1 class="display-4">Welcome To CampSite™ 🏕</h1>
         <p class="lead">View our campgrounds from all over the world.</p>
         <a class="btn btn-primary mt-0" href="/campgrounds/new">Add New Campground</a>
-    </header>
+    </div>
+</header>
 
+<div class="container">
     <div class="row">
         <% campgrounds.forEach(function(campground){ %>
         <div class="col-md-3 col-sm-6">
