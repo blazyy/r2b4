@@ -1,0 +1,34 @@
+<%- include("../partials/header") %>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Users</h1>
+        <p class="lead">View all users registered on this website.</p>
+    </div>
+</div>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Campgrounds Added</th>
+                <th scope="col">Reviews Given</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% let num = 1 %>
+            <% for(let i = 0; i < users.length; i++){ %>
+            <tr>
+                <th scope="row"><%= num %></th>
+                <td><%= users[i].username %></td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+                <% num++ %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include("../partials/footer") %>
