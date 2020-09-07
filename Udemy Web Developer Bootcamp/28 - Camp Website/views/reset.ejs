@@ -1,11 +1,11 @@
-<%- include("../partials/header") %>
+<%- include("partials/header") %>
 
 <div class="container">
     <h1 class="display-4 m-5 text-center">Reset Password</h1>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4">
-                <form action="/users/reset/<%= token %>" method="post">
+                <form action="/reset/<%= token %>" method="post">
                     <div class="form-group">
                         <input type="password" name="password" placeholder="Enter Password" class="form-control">
                     </div>
@@ -22,4 +22,4 @@
     </div>
 </div>
 
-<%- include("../partials/footer") %>
+<%- include("partials/footer") %>

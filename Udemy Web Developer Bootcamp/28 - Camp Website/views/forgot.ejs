@@ -1,11 +1,11 @@
-<%- include("../partials/header") %>
+<%- include("partials/header") %>
 
 <div class="container">
     <h1 class="display-4 m-5 text-center">Forgot Password</h1>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-4">
-                <form action="/users/forgot" method="post">
+                <form action="/forgot" method="post">
                     <div class="form-group">
                         <input type="email" name="email" placeholder="Email ID" class="form-control">
                         <small class="form-text text-muted p-2">Enter the email ID that you used to register with on this website.</small>
@@ -17,4 +17,4 @@
     </div>
 </div>
 
-<%- include("../partials/footer") %>
+<%- include("partials/footer") %>
