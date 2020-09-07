@@ -6,7 +6,9 @@ const user_schema = mongoose.Schema({
     email: {type: String, unique: true},
     password: String,
     reset_pw_token: String,
-    reset_pw_token_expires_on: Date
+    reset_pw_token_expires_on: Date,
+    campgrounds_added: {type: Number, default: 0},
+    reviews_given: {type: Number, default: 0}
 });
 
 user_schema.plugin(passport_local_mongoose);

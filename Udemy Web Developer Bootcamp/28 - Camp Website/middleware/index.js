@@ -54,7 +54,7 @@ const middleware_object = {
             return next();
         }
         req.flash('error', 'You need to be logged in to do that!'); // this line HAS TO BE BEFORE REDIRECT. this doesn't show up on current page, it shows up on the next page, i.e. here it'll show up in /login below
-        res.redirect('/login');
+        res.redirect('/users/login');
     }
 };
 
