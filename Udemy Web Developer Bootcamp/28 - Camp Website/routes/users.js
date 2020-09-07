@@ -20,13 +20,13 @@ router.get('/', function(req, res) {
     });
 });
 
-// NEW - user
+// NEW
 router.get('/new', function(req, res) {
     res.render('users/new');
 });
 
-// CREATE - user
-router.post('/new', function(req, res) {
+// CREATE
+router.post('/', function(req, res) {
     let new_user = new User({
         username: req.body.username,
         email: req.body.email
@@ -45,9 +45,10 @@ router.post('/new', function(req, res) {
     });
 });
 
-// SHOW - user
+// SHOW
 router.get('/:username', function(req, res){
     User.find({'username': req.params.username}, function(err, found_user){
+        console.log(found_user[0]);
         if(err || !found_user){
             console.log(err);
             req.flash('error', 'That user does not exist.');
