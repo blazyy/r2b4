@@ -6,37 +6,44 @@
         <p class="lead">View all users registered on this website.</p>
     </div>
 </div>
-<div class="container">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Username</th>
-                <th scope="col">Campgrounds Added</th>
-                <th scope="col">Reviews Given</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% let num = 1 %>
-            <% for(let i = 0; i < users.length; i++){ %>
-            <tr>
-                <th scope="row"><%= num %></th>
-                <td><%= users[i].username %></td>
-                <% if(users[i].campgrounds_added === 0){%>
-                    <td>-</td>
-                <% } else {%>
-                    <td><%= users[i].campgrounds_added %></td>
+
+<% if(users.length === 0){ %>
+    <div class="d-flex justify-content-center">
+        <p class="lead">No users currently registered.</p>
+    </div>
+<% } else{ %>
+    <div class="container mt-0">
+        <table class="table table-hover">
+            <thead class="bg-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Campgrounds Added</th>
+                    <th scope="col">Reviews Given</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let num = 1 %>
+                <% for(let i = 0; i < users.length; i++){ %>
+                <tr>
+                    <th scope="row"><%= num %></th>
+                    <td><%= users[i].username %></td>
+                    <% if(users[i].campgrounds_added === 0){%>
+                        <td>-</td>
+                    <% } else {%>
+                        <td><%= users[i].campgrounds_added %></td>
+                    <% } %>
+                    <% if(users[i].reviews_given === 0){%>
+                        <td>-</td>
+                    <% } else {%>
+                        <td><%= users[i].reviews_given %></td>
+                    <% } %>
+                </tr>
+                    <% num++ %>
                 <% } %>
-                <% if(users[i].reviews_given === 0){%>
-                    <td>-</td>
-                <% } else {%>
-                    <td><%= users[i].reviews_given %></td>
-                <% } %>
-            </tr>
-                <% num++ %>
-            <% } %>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+<% } %>
 
 <%- include("../partials/footer") %>
