@@ -35,7 +35,13 @@ router.post('/', middleware.is_logged_in, function(req, res) {
         if (err) {
             console.log(err);
         } else {
-            res.redirect('/campgrounds');
+            User.update({_id: req.user._id}, {$inc: {'campgrounds_added': 1}}, function(err, updated_campground){
+                if(err){
+                    console.log(err);
+                } else{
+                    res.redirect('/campgrounds');
+                }
+            });
         }
     });
 });
@@ -82,7 +88,7 @@ router.get('/:id/edit', middleware.check_campground_ownership, function(req, res
 
 // UPDATE
 router.put('/:id', middleware.check_campground_ownership, function(req, res) {
-    Campground.findByIdAndUpdate(req.params.id, req.body.camp, function(err, update_campground) {
+    Campground.findByIdAndUpdate(req.params.id, req.body.camp, function(err, updated_campground) {
         if (err) {
             res.redirect('/campgrounds');
         } else {
@@ -93,20 +99,30 @@ router.put('/:id', middleware.check_campground_ownership, function(req, res) {
 
 // DELETE
 router.delete('/:id', middleware.check_campground_ownership, function(req, res) {
-    Campground.findByIdAndRemove(req.params.id, (err, removed_campground) => {
+    Campground.findByIdAndRemove(req.params.id, function(err, removed_campground){
         if (err) {
             console.log(err);
+        } else {
+            Review.deleteMany({_id: {$in: removed_campground.reviews}}, function(err){
+                if (err) {
+                    console.log(err);
+                } else{
+                    User.update({_id: req.user._id}, {$inc: {'campgrounds_added': -1}}, function(err, updated_campground){
+                        if(err){
+                            console.log(err);
+                        } else{
+                            User.updateMany({$inc: {'reviews_given': -1}}, function(err){
+                                if(err){
+                                    console.log(err);
+                                } else{
+                                    res.redirect('/campgrounds');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
-        Review.deleteMany({
-            _id: {
-                $in: removed_campground.reviews
-            }
-        }, (err) => {
-            if (err) {
-                console.log(err);
-            }
-            res.redirect("/campgrounds");
-        });
     })
 });
 

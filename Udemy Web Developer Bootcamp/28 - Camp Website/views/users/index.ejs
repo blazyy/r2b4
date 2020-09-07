@@ -22,8 +22,16 @@
             <tr>
                 <th scope="row"><%= num %></th>
                 <td><%= users[i].username %></td>
-                <td>-</td>
-                <td>-</td>
+                <% if(users[i].campgrounds_added === 0){%>
+                    <td>-</td>
+                <% } else {%>
+                    <td><%= users[i].campgrounds_added %></td>
+                <% } %>
+                <% if(users[i].reviews_given === 0){%>
+                    <td>-</td>
+                <% } else {%>
+                    <td><%= users[i].reviews_given %></td>
+                <% } %>
             </tr>
                 <% num++ %>
             <% } %>

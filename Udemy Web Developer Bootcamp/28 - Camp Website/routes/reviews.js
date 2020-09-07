@@ -37,14 +37,20 @@ router.post('/', middleware.is_logged_in, function(req, res){
                     req.flash('error', 'That review does not exist.');
                     res.redirect('/campgrounds/' + found_campground._id);
                 } else{
-                    new_review.author.id = req.user._id; // req.user from PassportJS? I think so.
-                    new_review.author.username = req.user.username;
-                    new_review.save();
-                    found_campground.reviews.push(new_review);
-                    found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
-                    found_campground.save();
-                    req.flash('success', 'Added new review.');
-                    res.redirect('/campgrounds/' + found_campground._id);
+                    User.update({_id: req.user._id}, {$inc: {'reviews_given': 1}}, function(err, updated_campground){
+                        if(err){
+                            console.log(err);
+                        } else{
+                            new_review.author.id = req.user._id; // req.user from PassportJS? I think so.
+                            new_review.author.username = req.user.username;
+                            new_review.save();
+                            found_campground.reviews.push(new_review);
+                            found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
+                            found_campground.save();
+                            req.flash('success', 'Added new review.');
+                            res.redirect('/campgrounds/' + found_campground._id);
+                        }
+                    });
                 }
             });
         }
@@ -98,10 +104,16 @@ router.delete('/:review_id', middleware.check_review_ownership, function(req, re
                     req.flash('error', 'That campground does not exist.');
                     res.redirect('/campgrounds');
                 } else{
-                    found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
-                    found_campground.save();
-                    req.flash('success', 'Deleted review.');
-                    res.redirect('back');
+                    User.update({_id: req.user._id}, {$inc: {'reviews_given': -1}}, function(err, updated_campground){
+                        if(err){
+                            console.log(err);
+                        } else{
+                            found_campground.avg_rating = calculate_avg_rating(found_campground.reviews);
+                            found_campground.save();
+                            req.flash('success', 'Deleted review.');
+                            res.redirect('back');
+                        }
+                    });
                 }
             });
 
