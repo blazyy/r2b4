@@ -66,6 +66,12 @@ router.get('/:id', function(req, res) {
                 })
                 .catch(function(error) {
                     console.log(error);
+                })
+                .then(function(){
+                    res.render('campgrounds/show', {
+                        campground: found_campground,
+                        moment: moment,
+                    });
                 });
         }
     });
