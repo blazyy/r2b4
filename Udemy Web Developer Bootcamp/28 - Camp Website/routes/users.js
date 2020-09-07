@@ -1,14 +1,23 @@
 const express = require('express'),
     router = express.Router(),
     passport = require('passport'),
-    User = require('../models/user')
+    User = require('../models/user'),
+    Campground = require('../models/campground'),
     async = require('async'),
     nodemailer = require('nodemailer'),
     crypto = require('crypto');
 
 // INDEX
 router.get('/', function(req, res) {
-    res.send('view all users here');
+    User.find({}, function(err, users_from_database) {
+        if (err) {
+            console.log(error);
+        } else {
+            res.render('users/index', {
+                users: users_from_database
+            });
+        }
+    });
 });
 
 // NEW - user
