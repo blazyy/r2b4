@@ -7,20 +7,19 @@ const express = require('express'),
 
 // NEW - review
 router.get('/new', middleware.is_logged_in, function(req, res){
-    Campground.findById(req.params.id, function(err, found_campground){
+    Campground.findById(req.params.id).populate('reviews').exec(function(err, found_campground){
         if (err || !found_campground) {
             console.log(err);
             req.flash('error', 'That campground does not exist.');
             res.redirect('/campgrounds');
         } else {
-            Campground.find({'name': found_campground.name, "author.id": req.user._id}, function(err, another_found_campground){ // only allow one review per author per campground
-                if(another_found_campground.length){
+            found_campground.reviews.forEach(function(review){
+                if(String(req.user._id) === String(review.author.id)){
                     req.flash('error', 'You can only post one review!');
                     res.redirect('/campgrounds/' + found_campground._id);
-                } else{
-                    res.render('reviews/new', {campground: found_campground});
                 }
-            })
+            });
+            res.render('reviews/new', {campground: found_campground});
         }
     });
 });
