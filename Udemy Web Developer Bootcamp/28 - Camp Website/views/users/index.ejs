@@ -31,6 +31,12 @@
                         <a href="/users/<%= users[i].username %>">
                             <%= users[i].username %>
                         </a>
+                        <% if(users[i].is_admin) { %>
+                            <div id="empty-div"></div>
+                            <span class="text-danger bg-light rounded px-1">
+                                <small><strong>ADMIN</strong></small>
+                            </span>
+                        <% }%>
                     </td>
                     <% if(users[i].campgrounds_added === 0){%>
                         <td>-</td>
