@@ -8,6 +8,8 @@ const express = require('express'),
     nodemailer = require('nodemailer'),
     crypto = require('crypto');
 
+require('dotenv').config({path: 'requires.env'});
+
 // INDEX
 router.get('/', function(req, res) {
     User.find({}, function(err, users_from_database) {
@@ -32,6 +34,9 @@ router.post('/', function(req, res) {
         username: req.body.username,
         email: req.body.email
     });
+    if(req.body.admin_code === process.env['ADMIN_CODE']){
+        new_user.is_admin = true;
+    }
     User.register(new_user, req.body.password, function(err, new_user) {
         if (err) {
             console.log(err.keyValue);

@@ -14,7 +14,7 @@ router.get('/new', middleware.is_logged_in, function(req, res){
             res.redirect('/campgrounds');
         } else {
             found_campground.reviews.forEach(function(review){
-                if(String(req.user._id) === String(review.author.id)){
+                if(req.user._id.equals(review.author.id) && !req.user.is_admin){
                     req.flash('error', 'You can only post one review!');
                     res.redirect('/campgrounds/' + found_campground._id);
                 }

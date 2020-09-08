@@ -13,7 +13,7 @@ const middleware_object = {
                     res.redirect('/campgrounds');
                 } else {
                     // not using === because author.id is mongoose object and req.user._id is a string
-                    if (found_campground.author.id.equals(req.user._id)) { // does user own the campground?
+                    if (found_campground.author.id.equals(req.user._id) || req.user.is_admin) { // does user own the campground?
                         next();
                     } else {
                         req.flash('error', 'You don\'t have permission to do that!');
@@ -36,7 +36,7 @@ const middleware_object = {
                     res.redirect('/campgrounds/' + req.params.id);
                 } else {
                     // not using === because author.id is mongoose object and req.user._id is a string
-                    if (found_review.author.id.equals(req.user._id)) { // does user own the review?
+                    if (found_review.author.id.equals(req.user._id) || req.user.is_admin) { // does user own the review?
                         next();
                     } else {
                         req.flash('error', 'You don\'t have permission to do that!');
@@ -59,7 +59,7 @@ const middleware_object = {
                     res.redirect('back');
                 } else {
                     // not using === because user._id is mongoose object and req.user._id is a string
-                    if (found_user._id.equals(req.user._id)) { // does user own the profile?
+                    if (found_user._id.equals(req.user._id) || req.user.is_admin) { // does user own the profile?
                         next();
                     } else {
                         req.flash('error', 'You don\'t have permission to do that!');

@@ -64,7 +64,7 @@
                     <hr>
                     <p class="card-text"><%= campground.description %></p>
                     <p class="card-text mb-2 text-muted"><em>Added By <strong><%= campground.author.username %></strong>, <%= moment(campground.time).toNow(true) %> ago</em></p>
-                    <% if(current_user && campground.author.id.equals(current_user._id)) {%>
+                    <% if((current_user && campground.author.id.equals(current_user._id)) || (current_user && current_user.is_admin)) {%>
                         <a href="<%= campground._id %>/edit" class="btn btn-warning mt-2">Edit</a>
                         <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post" style="display: inline">
                             <button class="btn btn-danger mt-2">Delete</button>
@@ -104,7 +104,7 @@
                                 </div>
                                 <p class="text-right mb-3"><em><%= moment(review.time).toNow(true); %> ago</em></p>
                             </div>
-                            <% if(current_user && review.author.id.equals(current_user._id)) {%>
+                            <% if((current_user && review.author.id.equals(current_user._id)) || (current_user && current_user.is_admin)) {%>
                                 <div class="mt-3">
                                     <a href="/campgrounds/<%= campground._id%>/reviews/<%= review._id %>/edit" class="btn btn-sm btn-warning">
                                         Edit
