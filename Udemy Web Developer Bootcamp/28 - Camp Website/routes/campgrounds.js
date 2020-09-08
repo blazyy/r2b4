@@ -51,6 +51,7 @@ router.get('/:id', function(req, res) {
     // The .populate('reviews').exec() here just replaces the review references with the actual content
     // of the reviews themselves so that these can be sent as an object to the /show.js page
     Campground.findById(req.params.id).populate('reviews').exec(function(err, found_campground) {
+        let weather_found = false;
         if (err || !found_campground) {
             console.log(err);
             req.flash('error', 'That campground does not exist.');
@@ -58,6 +59,7 @@ router.get('/:id', function(req, res) {
         } else {
             axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + found_campground.location + '&appid=' + process.env['OPEN_WEATHER_MAP_API_KEY'])
                 .then(function(response) {
+                    weather_found = true;
                     res.render('campgrounds/show', {
                         campground: found_campground,
                         moment: moment,
@@ -68,10 +70,12 @@ router.get('/:id', function(req, res) {
                     console.log(error);
                 })
                 .then(function(){
-                    res.render('campgrounds/show', {
-                        campground: found_campground,
-                        moment: moment,
-                    });
+                    if(!weather_found){
+                        res.render('campgrounds/show', {
+                            campground: found_campground,
+                            moment: moment,
+                        });
+                    }
                 });
         }
     });
