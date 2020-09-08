@@ -11,6 +11,11 @@
     width: 100%;
 }
 
+#empty-div{
+    display: inline-block;
+    width: 1.5%;
+}
+
 .fa-star, .fa-star-half-alt {
     color: #ffc107;
 }
