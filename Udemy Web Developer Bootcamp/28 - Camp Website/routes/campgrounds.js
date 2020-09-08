@@ -20,7 +20,6 @@ router.get('/', function(req, res) {
 
 // NEW - campground
 router.get('/new', middleware.is_logged_in, function(req, res) {
-    req.flash('error', 'You don\'t have permission to do that!')
     res.render('campgrounds/new');
 });
 
