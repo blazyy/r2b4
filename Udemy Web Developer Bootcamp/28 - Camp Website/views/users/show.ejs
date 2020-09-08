@@ -11,7 +11,7 @@
                     <div class="d-flex justify-content-center">
                         <h5 class="card-title mt-2"><%= user.username %></h5>
                     </div>
-                        <% if(current_user && user._id.equals(current_user._id)) {%>
+                        <% if((current_user && user._id.equals(current_user._id)) || (current_user && current_user.is_admin)) {%>
                             <div class="d-flex justify-content-center mt-2">
                                 <a href="/users/<%= user.username %>/edit" class="btn btn-primary btn-sm">Edit Profile</a>
                             </div>
