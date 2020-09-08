@@ -54,7 +54,6 @@ router.get('/:username', function(req, res){
             res.redirect('/users');
         } else{
             Campground.find({'author.username': req.params.username}, function(err, campgrounds_from_database) {
-                console.log(campgrounds_from_database);
                 if (err) {
                     console.log(error);
                 } else {
