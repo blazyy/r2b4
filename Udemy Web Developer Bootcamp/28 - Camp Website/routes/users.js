@@ -3,6 +3,7 @@ const express = require('express'),
     passport = require('passport'),
     User = require('../models/user'),
     Campground = require('../models/campground'),
+    middleware = require('../middleware'),
     async = require('async'),
     nodemailer = require('nodemailer'),
     crypto = require('crypto');
@@ -51,7 +52,7 @@ router.get('/:username', function(req, res){
         if(err || !found_user){
             console.log(err);
             req.flash('error', 'That user does not exist.');
-            res.redirect('/users');
+            res.redirect('back');
         } else{
             Campground.find({'author.username': req.params.username}, function(err, campgrounds_from_database) {
                 if (err) {
@@ -64,6 +65,37 @@ router.get('/:username', function(req, res){
                 }
             });
 
+        }
+    });
+});
+
+// EDIT
+router.get('/:username/edit', middleware.check_account_ownership, function(req, res) {
+    User.findOne({'username': req.params.username}, function(err, found_user){
+        if(err || !found_user){
+            console.log(err);
+            req.flash('error', 'That user does not exist.');
+            res.redirect('back');
+        } else{
+            res.render('users/edit', {
+                user: found_user
+            });
+        }
+    });
+});
+
+// UPDATE
+router.put('/:username', middleware.check_account_ownership, function(req, res) {
+    if(!req.body.user.display_picture){
+        req.body.user.display_picture = 'https://www.clipartkey.com/mpngs/m/152-1520367_user-profile-default-image-png-clipart-png-download.png';
+    }
+    User.updateOne({'username': req.params.username}, req.body.user, function(err, updated_user) {
+        if (err) {
+            req.flash('error', 'Update failed.')
+            res.redirect('/users/' + req.params.username);
+        } else {
+            req.flash('success', 'Successfully updated!');
+            res.redirect('/users/' + req.params.username);
         }
     });
 });
