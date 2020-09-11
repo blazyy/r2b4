@@ -105,4 +105,9 @@ router.put('/:username', middleware.check_account_ownership, function(req, res) 
     });
 });
 
+// DELETE
+router.delete('/:username', middleware.check_account_ownership, function(req, res) {
+
+});
+
 module.exports = router;
