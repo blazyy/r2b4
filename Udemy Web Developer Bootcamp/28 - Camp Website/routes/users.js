@@ -107,7 +107,26 @@ router.put('/:username', middleware.check_account_ownership, function(req, res) 
 
 // DELETE
 router.delete('/:username', middleware.check_account_ownership, function(req, res) {
-
+    Campground.deleteMany({author: {id: req.user_id}}).populate('users').exec(function(err){
+        if(err){
+            console.log(err);
+        } else{
+            Review.deleteMany({author: {username: req.params.username}}).populate('users').exec(function(err){
+                if(err){
+                    console.log(err);
+                } else{
+                    User.deleteOne({username: req.params.username}, function(err){
+                        if(err){
+                            console.log(err);
+                        } else{
+                            req.flash('success', 'Account deleted!');
+                            res.redirect('/campgrounds');
+                        }
+                    })
+                }
+            })
+        }
+    })
 });
 
 module.exports = router;

@@ -15,6 +15,12 @@
                             <div class="d-flex justify-content-center mt-2">
                                 <a href="/users/<%= user.username %>/edit" class="btn btn-primary btn-sm">Edit Profile</a>
                             </div>
+                            <div class="d-flex justify-content-center mt-2">
+                                <%# Anchor tags only make get requests. Since we need post, form is used below %>
+                                <form action="/users/<%= user.username%>?_method=delete" method="post" style="display: inline">
+                                    <input type="submit" class="btn btn-sm btn-danger" value="Delete Profile"></input>
+                                </form>
+                            </div>
                         <% } %>
                 </div>
             </div>
