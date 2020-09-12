@@ -107,26 +107,42 @@ router.put('/:username', middleware.check_account_ownership, function(req, res) 
 
 // DELETE
 router.delete('/:username', middleware.check_account_ownership, function(req, res) {
-    Campground.deleteMany({author: {id: req.user_id}}).populate('users').exec(function(err){
+    User.find({username: req.params.username}, function(err){
         if(err){
             console.log(err);
         } else{
-            Review.deleteMany({author: {username: req.params.username}}).populate('users').exec(function(err){
+            Campground.findOne({'author.username': req.params.username}).populate({path: 'reviews', populate: {path: 'reviews'}}).exec(function(err, found_campground){
                 if(err){
                     console.log(err);
                 } else{
-                    User.deleteOne({username: req.params.username}, function(err){
-                        if(err){
-                            console.log(err);
-                        } else{
-                            req.flash('success', 'Account deleted!');
-                            res.redirect('/campgrounds');
-                        }
-                    })
+                    console.log(found_campground.reviews);
                 }
             })
         }
     })
 });
+
+// router.delete('/:username', middleware.check_account_ownership, function(req, res) {
+//     User.find({username: req.params.username}, function(err){
+//         if(err){
+//             console.log(err);
+//         } else{
+//             Campground.deleteMany({'author.username': req.params.username}).populate('users').exec(function(deleted_campground, err){
+//                 if(err){
+//                     console.log(err);
+//                 } else{
+//                     Reviews.deleteMany({'author.username': req.params.username}, function(err){
+//                         if(err){
+//                             console.log(err);
+//                         } else{
+//                             req.flash('success', 'Profile deleted.');
+//                             res.redirect('/campgrounds');
+//                         }
+//                     })
+//                 }
+//             })
+//         }
+//     })
+// });
 
 module.exports = router;
