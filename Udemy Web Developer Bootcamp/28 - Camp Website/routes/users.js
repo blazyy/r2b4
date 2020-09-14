@@ -107,17 +107,6 @@ router.put('/:username', middleware.check_account_ownership, function(req, res) 
 
 // DELETE
 
-// router.delete('/:username', middleware.check_account_ownership, function(req, res){
-//     User.updateOne({'username': req.params.username}, {account_deleted: true}, function(err, deleted_user){
-//         if(err){
-//             console.log(err);
-//         } else{
-//             req.flash('success', 'Account deleted');
-//             res.redirect('/campgrounds');
-//         }
-//     })
-// });
-
 router.delete('/:username', middleware.check_account_ownership, function(req, res){
     User.remove({'username': req.params.username}, function(err, deleted_user){
         if(err){
