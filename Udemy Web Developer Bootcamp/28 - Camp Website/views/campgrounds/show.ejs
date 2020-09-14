@@ -68,13 +68,25 @@
                     <p class="card-subtitle text-muted text-left"><%= campground.location %></p>
                     <hr>
                     <p class="card-text"><%= campground.description %></p>
-                    <p class="card-text mb-2 text-muted"><em>Added By <strong><%= campground.author.username %></strong>, <%= moment(campground.time).toNow(true) %> ago</em></p>
-                    <% if((current_user && campground.author.id.equals(current_user._id)) || (current_user && current_user.is_admin)) {%>
-                        <a href="<%= campground._id %>/edit" class="btn btn-warning mt-2">Edit</a>
-                        <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post" style="display: inline">
-                            <button class="btn btn-danger mt-2">Delete</button>
-                        </form>
-                    <% } %>
+                    <div>
+                        <% user_exists = false; %>
+                        <% users.forEach(function(user){ %>
+                            <% if(user.equals(campground.author.id)){ %>
+                                <% user_exists = true; %>
+                            <% } %>
+                        <% }); %>
+                        <% if(!user_exists){ %>
+                            <p class="card-text mb-2 text-muted"><em>Added By [deleted], <%= moment(campground.time).toNow(true) %> ago</em></p>
+                        <% } else { %>
+                            <p class="card-text mb-2 text-muted"><em>Added By <strong><%= campground.author.username %></strong>, <%= moment(campground.time).toNow(true) %> ago</em></p>
+                        <% } %>
+                        <% if((current_user && campground.author.id.equals(current_user._id)) || (current_user && current_user.is_admin)) {%>
+                            <a href="<%= campground._id %>/edit" class="btn btn-warning mt-2">Edit</a>
+                            <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post" style="display: inline">
+                                <button class="btn btn-danger mt-2">Delete</button>
+                            </form>
+                        <% } %>
+                    </div>
                 </div>
             </div>
             <div class="card bg-light p-3">
@@ -87,7 +99,19 @@
                     <div class="row">
                         <div class="col-md-12 card-body">
                             <div class="d-flex justify-content-between">
-                                <p class="lead font-italic"><%= review.author.username %></p>
+                                <div>
+                                    <% user_exists = false; %>
+                                    <% users.forEach(function(user){ %>
+                                        <% if(user.equals(review.author.id)){ %>
+                                            <% user_exists = true; %>
+                                        <% } %>
+                                    <% }); %>
+                                    <% if(!user_exists){ %>
+                                        <p class="lead font-italic text-muted">[deleted]</p>
+                                    <% } else { %>
+                                        <p class="lead font-italic"><%= review.author.username %></p>
+                                    <% } %>
+                                </div>
                                 <div>
                                     <% let stars = 0 %>
                                     <% while(stars < review.rating) { %>
