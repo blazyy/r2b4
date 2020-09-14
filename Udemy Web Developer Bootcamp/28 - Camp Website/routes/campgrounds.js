@@ -116,24 +116,37 @@ router.put('/:id', middleware.check_campground_ownership, function(req, res) {
 });
 
 // DELETE
+// I realize the callback hell. I'll fix it in the future. Probably.
 router.delete('/:id', middleware.check_campground_ownership, function(req, res) {
     Campground.findByIdAndRemove(req.params.id, function(err, removed_campground){
         if (err) {
             console.log(err);
         } else {
-            Review.deleteMany({_id: {$in: removed_campground.reviews}}, function(err){
-                if (err) {
+            User.update({_id: removed_campground.author.id}, {$inc: {'campgrounds_added': -1}}, function(err){
+                if(err){
                     console.log(err);
                 } else{
-                    User.update({_id: req.user._id}, {$inc: {'campgrounds_added': -1}}, function(err, updated_campground){
-                        if(err){
+                    // doing this because filtering with _id: false to get only the author ids returned undefined
+                    Review.find({_id: {$in: removed_campground.reviews}}, {author:{id: true}}, function(err, reviews_to_remove){
+                        if (err) {
                             console.log(err);
                         } else{
-                            // have to change. right now it decrements reviews given fo r all users, instead of users who gave revies on that particular campground
-                            User.updateMany({$inc: {'reviews_given': -1}}, function(err){
+                            const review_ids = []
+                            reviews_to_remove.forEach(function(review){
+                                review_ids.push(review.author.id);
+                            })
+                            review_ids.forEach(function(review_id){
+                                User.update({_id: review_id}, {$inc: {'reviews_given': -1}}, function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                });
+                            });
+                            Review.deleteMany({_id: {$in: removed_campground.reviews}}, function(err){
                                 if(err){
                                     console.log(err);
                                 } else{
+                                    req.flash('success', 'Deleted campground.');
                                     res.redirect('/campgrounds');
                                 }
                             });
