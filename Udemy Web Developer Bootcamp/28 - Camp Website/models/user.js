@@ -11,7 +11,8 @@ const user_schema = mongoose.Schema({
     reset_pw_token_expires_on: Date,
     campgrounds_added: {type: Number, default: 0},
     reviews_given: {type: Number, default: 0},
-    is_admin: {type: Boolean, default: false}
+    is_admin: {type: Boolean, default: false},
+    account_deleted: {type: Boolean, default: false}
 });
 
 user_schema.plugin(passport_local_mongoose);
