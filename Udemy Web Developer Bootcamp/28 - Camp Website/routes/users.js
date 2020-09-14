@@ -106,33 +106,15 @@ router.put('/:username', middleware.check_account_ownership, function(req, res) 
 });
 
 // DELETE
-// I realize the callback hell. I will fix it soon. Maybe.
 router.delete('/:username', middleware.check_account_ownership, function(req, res){
-    Review.find({'author.username': req.params.username}, function(err, found_reviews){
+    User.updateOne({'username': req.params.username}, {account_deleted: true}, function(err, deleted_user){
         if(err){
             console.log(err);
         } else{
-            // finding all campgrounds to go through each one and delete review of user if it exists
-            // doing this since there's the campground that a review is given on is not stored in the review model
-            found_reviews.forEach(function(review){
-                Campground.find({}, function(err, all_campgrounds){
-                    all_campgrounds.forEach(function(campground){
-                        Campground.update({_id: campground._id}, {$pull: {reviews: review._id}}, function(err){
-                            if(err){
-                                console.log(err);
-                            }
-                        });
-                    });
-                });
-            });
-            req.flash('success', 'Deleted succesfully.');
+            req.flash('success', 'Account deleted');
             res.redirect('/campgrounds');
         }
-    });
+    })
 });
-
-// need to delete reviews from all campgrounds
-// decrement reviews given, campgrounds added when user deleted
-// need to delete reviews of other users on user's campground
 
 module.exports = router;
