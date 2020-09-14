@@ -13,13 +13,17 @@ router.get('/new', middleware.is_logged_in, function(req, res){
             req.flash('error', 'That campground does not exist.');
             res.redirect('/campgrounds');
         } else {
+            let review_already_exists = false;
             found_campground.reviews.forEach(function(review){
-                if(req.user._id.equals(review.author.id) && !req.user.is_admin){
+                if(req.user._id.equals(review.author.id) && !req.user.is_admin && !review_already_exists){
+                    review_already_exists = true;
                     req.flash('error', 'You can only post one review!');
                     res.redirect('/campgrounds/' + found_campground._id);
                 }
             });
-            res.render('reviews/new', {campground: found_campground});
+            if(!review_already_exists){
+                res.render('reviews/new', {campground: found_campground});
+            }
         }
     });
 });
