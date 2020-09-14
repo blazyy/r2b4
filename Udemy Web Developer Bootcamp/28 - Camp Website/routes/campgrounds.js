@@ -56,26 +56,35 @@ router.get('/:id', function(req, res) {
             req.flash('error', 'That campground does not exist.');
             res.redirect('/campgrounds');
         } else {
-            axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + found_campground.location + '&appid=' + process.env['OPEN_WEATHER_MAP_API_KEY'])
-                .then(function(response) {
-                    weather_found = true;
-                    res.render('campgrounds/show', {
-                        campground: found_campground,
-                        moment: moment,
-                        weather: response.data
-                    });
-                })
-                .catch(function(error) {
-                    console.log(error);
-                })
-                .then(function(){
-                    if(!weather_found){
+            // Project with _id: 0 was returning undefined. I have no idea why and it's driving me nuts
+            User.find({}, {username: true}, function(err, all_available_users){
+                users = []
+                all_available_users.forEach(function(user){
+                    users.push(user._id);
+                });
+                axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + found_campground.location + '&appid=' + process.env['OPEN_WEATHER_MAP_API_KEY'])
+                    .then(function(response) {
+                        weather_found = true;
                         res.render('campgrounds/show', {
                             campground: found_campground,
+                            users: users,
                             moment: moment,
+                            weather: response.data
                         });
-                    }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    })
+                    .then(function(){
+                        if(!weather_found){
+                            res.render('campgrounds/show', {
+                                campground: found_campground,
+                                users: users,
+                                moment: moment,
+                            });
+                        }
                 });
+            });
         }
     });
 });
@@ -120,6 +129,7 @@ router.delete('/:id', middleware.check_campground_ownership, function(req, res) 
                         if(err){
                             console.log(err);
                         } else{
+                            // have to change. right now it decrements reviews given fo r all users, instead of users who gave revies on that particular campground
                             User.updateMany({$inc: {'reviews_given': -1}}, function(err){
                                 if(err){
                                     console.log(err);
