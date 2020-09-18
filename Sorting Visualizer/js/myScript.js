@@ -1,5 +1,5 @@
 var margin_top_percentage = 0.2;
-var num_bars = 200;
+var num_bars = 500;
 var bar_color = 255;
 var bar_width;
 var bar_heights = [];
@@ -40,12 +40,10 @@ function generate_heights() {
 }
 
 function draw_bars() {
-    width_pen = 0;
     for (var i = 0; i < num_bars; i++) {
         stroke(bar_color);
         fill(bar_color);
-        rect(width_pen, height - bar_heights[i], bar_width, bar_heights[i]);
-        width_pen += bar_width;
+        rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
     }
 }
 
@@ -54,13 +52,13 @@ async function bubble_sort() {
     for (var i = 0; i < num_bars; i++) {
         for (var j = 0; j < num_bars - i - 1; j++) {
             if (bar_heights[j] > bar_heights[j + 1]) {
-                await sleep(4); // 4 ms is the smallest delay possible using setTimeout()
+                // await sleep(4); // 4 ms is the smallest delay possible using setTimeout()
                 var temp = bar_heights[j];
                 bar_heights[j] = bar_heights[j + 1];
                 bar_heights[j + 1] = temp;
             }
         }
-        // await sleep(1);
+        await sleep(4);
     }
     $('#reset-button').removeAttr('disabled');
     currently_sorting = false;
