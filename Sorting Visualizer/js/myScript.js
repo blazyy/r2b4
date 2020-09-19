@@ -9,7 +9,8 @@ var selected_sort = '1';
 available_sorts = {
     '1': bubble_sort,
     '2': selection_sort,
-    '3': quick_sort
+    '3': quick_sort,
+    '4': insertion_sort
 }
 
 $(document).ready(function() {
@@ -122,6 +123,19 @@ async function quick_sort(start = 0, end = num_bars-1){
     } else{
         $('#new-button').removeAttr('disabled');
         $('#num-bars-range').removeAttr('disabled');
+    }
+}
+
+async function insertion_sort(){
+    for(var i = 1; i < num_bars; i++){
+        var current = i;
+        var value = bar_heights[i];
+        while(current > 0 && bar_heights[current - 1] > value){
+            bar_heights[current] = bar_heights[current - 1];
+            current--;
+            await sleep(4);
+        }
+        bar_heights[current] = value;
     }
 }
 
