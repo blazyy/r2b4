@@ -1,4 +1,4 @@
-var margin_top_percentage = 0.2;
+var margin_top_percentage = 0.3;
 var num_bars = 200;
 var bar_color = 255;
 var bar_width;
@@ -8,18 +8,20 @@ var stopped = false;
 var selected_sort = '1';
 available_sorts = {
     '1': bubble_sort,
-    '2': selection_sort
+    '2': selection_sort,
+    '3': quick_sort
 }
 
 $(document).ready(function() {
     $('#start-button').on('click', function(){
         $('#start-button').attr('disabled', true);
-        $('#reset-button').attr('disabled', true);
+        $('#new-button').attr('disabled', true);
         $('#num-bars-range').attr('disabled', true);
+        $('#reset-button').removeAttr('disabled');
         available_sorts[selected_sort]();
     });
 
-    $('#reset-button').on('click', function(){
+    $('#new-button').on('click', function(){
         generate_heights();
         $('#start-button').removeAttr('disabled');
     })
@@ -34,6 +36,10 @@ $(document).ready(function() {
     $('#sort-select-dropdown').on('change', function(){
         selected_sort = $(this).val();
     })
+
+    $('#reset-button').on('click', function(){
+        window.location.reload();
+    });
 });
 
 function setup() {
@@ -69,13 +75,11 @@ async function bubble_sort() {
         for (var j = 0; j < num_bars - i - 1; j++) {
             if (bar_heights[j] > bar_heights[j + 1]) {
                 await sleep(4); // 4 ms is the smallest delay possible using setTimeout()
-                let temp = bar_heights[j];
-                bar_heights[j] = bar_heights[j + 1];
-                bar_heights[j + 1] = temp;
+                swap(j, j+1);
             }
         }
     }
-    $('#reset-button').removeAttr('disabled');
+    $('#new-button').removeAttr('disabled');
     $('#num-bars-range').removeAttr('disabled');
 }
 
@@ -88,12 +92,37 @@ async function selection_sort(){
             }
         }
         await sleep(4);
-        let temp = bar_heights[i];
-        bar_heights[i] = bar_heights[min_idx];
-        bar_heights[min_idx] = temp;
+        swap(i, min_idx);
     }
-    $('#reset-button').removeAttr('disabled');
+    $('#new-button').removeAttr('disabled');
     $('#num-bars-range').removeAttr('disabled');
+}
+
+async function partition(start, end){
+    var pivot = bar_heights[end];
+    var partn_idx = start;
+    for(var i = start; i < end; i++){
+        if(bar_heights[i] <= pivot){
+            await sleep(4);
+            await swap(i, partn_idx)
+            partn_idx++;
+        }
+    }
+    await swap(partn_idx, end);
+    return partn_idx;
+}
+
+async function quick_sort(start = 0, end = num_bars-1){
+    if(start < end){
+        var partn_idx = await partition(start, end);
+        await Promise.all([
+            quick_sort(start, partn_idx - 1),
+            quick_sort(partn_idx + 1, end)
+        ]);
+    } else{
+        $('#new-button').removeAttr('disabled');
+        $('#num-bars-range').removeAttr('disabled');
+    }
 }
 
 function windowResized() {
@@ -106,4 +135,10 @@ function windowResized() {
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function swap(x, y){
+    var temp = bar_heights[x];
+    bar_heights[x] = bar_heights[y];
+    bar_heights[y] = temp;
 }
