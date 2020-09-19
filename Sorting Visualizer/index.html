@@ -7,14 +7,30 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js" integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA==" crossorigin="anonymous"></script>
     <script type="text/javascript" src="js/myScript.js"></script>
 </head>
 
 <body>
-    <button id="start-button" class="btn btn-primary">Start</button>
-    <button id="reset-button" class="btn btn-danger">Reset</button>
+    <div class="row">
+        <div class="col-lg-2">
+            <label for="num-bars-range">Number of bars</label>
+            <input id="num-bars-range" type="range" class="custom-range" value="200" min="50" max="1000">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <select class="custom-select" id="sort-select-dropdown">
+                <option value="1"selected>Bubble Sort</option>
+                <option value="2">Selection Sort</option>
+            </select>
+        </div>
+        <button id="start-button" class="btn btn-primary">Start</button>
+        <button id="reset-button" class="btn btn-danger">Reset</button>
+    </div>
+
 </body>
 
 </html>
