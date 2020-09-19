@@ -35,6 +35,7 @@ $(document).ready(function() {
     });
 
     $('#sort-select-dropdown').on('change', function(){
+        $('#start-button').removeAttr('disabled');
         selected_sort = $(this).val();
     })
 
@@ -133,10 +134,12 @@ async function insertion_sort(){
         while(current > 0 && bar_heights[current - 1] > value){
             bar_heights[current] = bar_heights[current - 1];
             current--;
-            await sleep(4);
         }
+        await sleep(4);
         bar_heights[current] = value;
     }
+    $('#new-button').removeAttr('disabled');
+    $('#num-bars-range').removeAttr('disabled');
 }
 
 function windowResized() {
