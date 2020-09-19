@@ -4,7 +4,7 @@ body, html {
 }
 
 body{
-    overflow: hidden; /* hides scrollbar */
+    /* overflow: hidden; /* hides scrollbar */ */
     background: black;
     color: white;
 }
