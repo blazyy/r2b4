@@ -3,6 +3,7 @@ var num_bars = 200;
 var bar_color = 255;
 var bar_width;
 var bar_heights = [];
+var bar_colors = [];
 var currently_sorting = false;
 var stopped = false;
 var selected_sort = 'bubble';
@@ -61,26 +62,44 @@ function draw() {
 function generate_heights() {
     bar_heights = [];
     for (var i = 0; i < num_bars; i++) {
-        // The 24.375 is just a ratio I calculated which increases the height of the bars so that the bars don't have a height that seems empty
-        bar_heights.push(Math.floor(Math.random() * ((windowHeight) - (windowHeight * margin_top_percentage))) + (windowHeight / 24.375));
+        bar_heights.push(Math.floor(Math.random() * ((windowHeight) - (windowHeight * margin_top_percentage))));
+        bar_colors.push(color('white'));
     }
 }
 
 function draw_bars() {
     for (var i = 0; i < num_bars; i++) {
-        stroke(bar_color);
-        fill(bar_color);
+        stroke(color('black'));
+        fill(bar_colors[i]);
         rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
+    }
+}
+
+function apply_colors(initial_idx, last_idx, bars_to_fill, color){
+    // last_idx is there so that the red colour isn't applied on the sorted bars
+    var overflow_counter = 0;
+    for(var i = initial_idx; i < initial_idx + bars_to_fill; i++){
+        if(i < last_idx){
+            if(i > num_bars){
+                bar_colors[overflow_counter] = color;
+                overflow_counter++;
+            }
+            else{
+                bar_colors[i] = color;
+            }
+        }
     }
 }
 
 async function bubble_sort() {
     for (var i = 0; i < num_bars; i++) {
         for (var j = 0; j < num_bars - i - 1; j++) {
+            apply_colors(j, num_bars - i - 1, 15, 'red');
             if (bar_heights[j] > bar_heights[j + 1]) {
                 await sleep(4); // 4 ms is the smallest delay possible using setTimeout()
                 swap(j, j + 1);
             }
+            apply_colors(j, num_bars - i + 1, 15, 'white');
         }
     }
     $('#new-button').removeAttr('disabled');
@@ -92,10 +111,10 @@ async function selection_sort() {
         var min_idx = i;
         for (var j = i; j < num_bars; j++) {
             if (bar_heights[j] < bar_heights[min_idx]) {
+                await sleep(4);
                 min_idx = j;
             }
         }
-        await sleep(4);
         swap(i, min_idx);
     }
     $('#new-button').removeAttr('disabled');
@@ -144,14 +163,14 @@ async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
     }
 }
 
-function merge_sort(arr = bar_heights) {
+    function merge_sort(arr = bar_heights) {
     if (arr.length <= 1) {
         return arr;
-    }
-    var mid = Math.round((arr.length / 2));
-    var left = arr.slice(0, mid);
-    var right = arr.slice(mid);
-    return merge(merge_sort(left), merge_sort(right));
+        }
+        var mid = Math.round((arr.length / 2));
+        var left = arr.slice(0, mid);
+        var right = arr.slice(mid);
+        return merge(merge_sort(left), merge_sort(right));
 }
 
 function merge(left, right) {
