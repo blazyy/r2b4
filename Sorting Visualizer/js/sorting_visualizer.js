@@ -18,9 +18,7 @@ available_sorts = {
 
 $(document).ready(function() {
     $('#start-button').on('click', function() {
-        $('#start-button').attr('disabled', true);
-        $('#new-button').attr('disabled', true);
-        $('#num-bars-range').attr('disabled', true);
+        $('#start-button, #new-button, #num-bars-range').attr('disabled', true);
         $('#reset-button').removeAttr('disabled');
         available_sorts[selected_sort]();
     });
@@ -73,23 +71,6 @@ function draw_bars() {
         stroke(color('black'));
         fill(bar_colors[i]);
         rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
-    }
-}
-
-function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm){
-    if(algorithm === 'bubble' || algorithm === 'selection'){
-        for(var i = initial_idx; i < initial_idx + bars_to_fill; i++){
-            if(i < limit_idx){
-                bar_colors[i] = color;
-            } else{
-                break;
-            }
-        }
-    }
-    else if(algorithm === 'insertion'){
-        for(var i = initial_idx; i >= initial_idx - bars_to_fill; i--){
-            bar_colors[i] = color;
-        }
     }
 }
 

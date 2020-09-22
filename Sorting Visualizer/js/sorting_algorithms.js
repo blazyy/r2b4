@@ -1,3 +1,30 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function swap(x, y) {
+    var temp = bar_heights[x];
+    bar_heights[x] = bar_heights[y];
+    bar_heights[y] = temp;
+}
+
+function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm){
+    if(algorithm === 'bubble' || algorithm === 'selection'){
+        for(var i = initial_idx; i < initial_idx + bars_to_fill; i++){
+            if(i < limit_idx){
+                bar_colors[i] = color;
+            } else{
+                break;
+            }
+        }
+    }
+    else if(algorithm === 'insertion'){
+        for(var i = initial_idx; i >= initial_idx - bars_to_fill; i--){
+            bar_colors[i] = color;
+        }
+    }
+}
+
 async function bubble_sort() {
     for (var i = 0; i < num_bars; i++) {
         var swapped = false;
@@ -100,15 +127,4 @@ function merge(left, right) {
     }
     bar_heights = sorted.concat(left, right);
     return bar_heights;
-}
-
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function swap(x, y) {
-    var temp = bar_heights[x];
-    bar_heights[x] = bar_heights[y];
-    bar_heights[y] = temp;
 }
