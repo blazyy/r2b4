@@ -8,18 +8,17 @@ function swap(x, y) {
     bar_heights[y] = temp;
 }
 
-function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm){
-    if(algorithm === 'bubble' || algorithm === 'selection'){
-        for(var i = initial_idx; i < initial_idx + bars_to_fill; i++){
-            if(i < limit_idx){
+function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm) {
+    if (algorithm === 'bubble' || algorithm === 'selection') {
+        for (var i = initial_idx; i < initial_idx + bars_to_fill; i++) {
+            if (i < limit_idx) {
                 bar_colors[i] = color;
-            } else{
+            } else {
                 break;
             }
         }
-    }
-    else if(algorithm === 'insertion'){
-        for(var i = initial_idx; i >= initial_idx - bars_to_fill; i--){
+    } else if (algorithm === 'insertion') {
+        for (var i = initial_idx; i >= initial_idx - bars_to_fill; i--) {
             bar_colors[i] = color;
         }
     }
@@ -34,10 +33,10 @@ async function bubble_sort() {
                 swap(j, j + 1);
                 swapped = true;
             }
-            await sleep(4); // 4 ms is the smallest delay possible using setTimeout()
+            await sleep(4); // 4 ms is the smallest delay possible using setTimeout(). This is a browser limitation.
             apply_colors(j, num_bars - i, bar_color_width, 'white', 'bubble');
         }
-        if(!swapped){
+        if (!swapped) {
             return;
         }
     }
@@ -51,8 +50,8 @@ async function selection_sort() {
         for (var j = i; j < num_bars; j++) {
             apply_colors(j, num_bars, bar_color_width, 'red', 'selection');
             if (bar_heights[j] < bar_heights[min_idx]) {
-                await sleep(4);
                 min_idx = j;
+                await sleep(4);
             }
             apply_colors(j, num_bars, bar_color_width, 'white', 'selection');
         }
@@ -83,11 +82,13 @@ async function partition(start, end) {
     var pivot = bar_heights[end];
     var partn_idx = start;
     for (var i = start; i < end; i++) {
+        apply_colors(i, 0, bar_color_width, 'red', 'quick');
         if (bar_heights[i] <= pivot) {
             await sleep(4);
             await swap(i, partn_idx)
             partn_idx++;
         }
+        apply_colors(i, 0, bar_color_width, 'white', 'quick');
     }
     await swap(partn_idx, end);
     return partn_idx;
@@ -106,14 +107,14 @@ async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
     }
 }
 
-    function merge_sort(arr = bar_heights) {
+function merge_sort(arr = bar_heights) {
     if (arr.length <= 1) {
         return arr;
-        }
-        var mid = Math.round((arr.length / 2));
-        var left = arr.slice(0, mid);
-        var right = arr.slice(mid);
-        return merge(merge_sort(left), merge_sort(right));
+    }
+    var mid = Math.round((arr.length / 2));
+    var left = arr.slice(0, mid);
+    var right = arr.slice(mid);
+    return merge(merge_sort(left), merge_sort(right));
 }
 
 function merge(left, right) {
