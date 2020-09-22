@@ -78,7 +78,7 @@ async function insertion_sort() {
     $('#num-bars-range').removeAttr('disabled');
 }
 
-async function partition(start, end) {
+async function partition_lomuto(start, end) {
     var pivot = bar_heights[end];
     var partn_idx = start;
     for (var i = start; i < end; i++) {
@@ -96,7 +96,7 @@ async function partition(start, end) {
 
 async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
     if (start < end) {
-        var partn_idx = await partition(start, end);
+        var partn_idx = await partition_lomuto(start, end);
         await Promise.all([
             quick_sort_lomuto(start, partn_idx - 1),
             quick_sort_lomuto(partn_idx + 1, end)
@@ -104,6 +104,37 @@ async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
     } else {
         $('#new-button').removeAttr('disabled');
         $('#num-bars-range').removeAttr('disabled');
+    }
+}
+
+async function partition_hoare(start, end){
+    var pivot = bar_heights[start];
+    var i = start - 1;
+    var j = end + 1;
+    while(true){
+        i++;
+        while(bar_heights[i] < pivot){
+            i++;
+        }
+        j--;
+        while(bar_heights[j] > pivot){
+            j--;
+        }
+        if(i >= j){
+            return j;
+        }
+        await sleep(4);
+        await swap(i, j);
+    }
+}
+
+async function quick_sort_hoare(start = 0, end = num_bars - 1){
+    if(start < end){
+        var partn_idx = await partition_hoare(start, end);
+        await Promise.all([
+            quick_sort_hoare(start, partn_idx),
+            quick_sort_hoare(partn_idx + 1, end)
+        ]);
     }
 }
 
