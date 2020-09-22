@@ -9,7 +9,7 @@ function swap(x, y) {
 }
 
 function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm) {
-    if (algorithm === 'bubble' || algorithm === 'selection') {
+    if (algorithm === 'bubble' || algorithm === 'selection' || algorithm === 'quick_l' || algorithm === 'quick_h') {
         for (var i = initial_idx; i < initial_idx + bars_to_fill; i++) {
             if (i < limit_idx) {
                 bar_colors[i] = color;
@@ -82,13 +82,13 @@ async function partition_lomuto(start, end) {
     var pivot = bar_heights[end];
     var partn_idx = start;
     for (var i = start; i < end; i++) {
-        apply_colors(i, 0, bar_color_width, 'red', 'quick');
         if (bar_heights[i] <= pivot) {
+            apply_colors(i, end, bar_color_width, 'red', 'quick_l');
             await sleep(4);
             await swap(i, partn_idx)
             partn_idx++;
+            apply_colors(i, end, bar_color_width, 'white', 'quick_l');
         }
-        apply_colors(i, 0, bar_color_width, 'white', 'quick');
     }
     await swap(partn_idx, end);
     return partn_idx;
@@ -123,7 +123,11 @@ async function partition_hoare(start, end){
         if(i >= j){
             return j;
         }
+        apply_colors(i, end, bar_color_width, 'red', 'quick_h');
+        apply_colors(j, end, bar_color_width, 'red', 'quick_h');
         await sleep(4);
+        apply_colors(i, end, bar_color_width, 'white', 'quick_h');
+        apply_colors(j, end, bar_color_width, 'white', 'quick_h');
         await swap(i, j);
     }
 }
