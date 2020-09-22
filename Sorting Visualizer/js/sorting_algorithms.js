@@ -85,42 +85,40 @@ async function partition_lomuto(start, end) {
         if (bar_heights[i] <= pivot) {
             apply_colors(i, end, bar_color_width, 'red', 'quick_l');
             await sleep(4);
-            await swap(i, partn_idx)
+            swap(i, partn_idx)
             partn_idx++;
             apply_colors(i, end, bar_color_width, 'white', 'quick_l');
         }
     }
-    await swap(partn_idx, end);
+    swap(partn_idx, end);
     return partn_idx;
 }
 
 async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
     if (start < end) {
         var partn_idx = await partition_lomuto(start, end);
-        await Promise.all([
-            quick_sort_lomuto(start, partn_idx - 1),
-            quick_sort_lomuto(partn_idx + 1, end)
-        ]);
+        await quick_sort_lomuto(start, partn_idx - 1);
+        await quick_sort_lomuto(partn_idx + 1, end);
     } else {
         $('#new-button').removeAttr('disabled');
         $('#num-bars-range').removeAttr('disabled');
     }
 }
 
-async function partition_hoare(start, end){
+async function partition_hoare(start, end) {
     var pivot = bar_heights[start];
     var i = start - 1;
     var j = end + 1;
-    while(true){
+    while (true) {
         i++;
-        while(bar_heights[i] < pivot){
+        while (bar_heights[i] < pivot) {
             i++;
         }
         j--;
-        while(bar_heights[j] > pivot){
+        while (bar_heights[j] > pivot) {
             j--;
         }
-        if(i >= j){
+        if (i >= j) {
             return j;
         }
         apply_colors(i, end, bar_color_width, 'red', 'quick_h');
@@ -128,17 +126,15 @@ async function partition_hoare(start, end){
         await sleep(4);
         apply_colors(i, end, bar_color_width, 'white', 'quick_h');
         apply_colors(j, end, bar_color_width, 'white', 'quick_h');
-        await swap(i, j);
+        swap(i, j);
     }
 }
 
-async function quick_sort_hoare(start = 0, end = num_bars - 1){
-    if(start < end){
+async function quick_sort_hoare(start = 0, end = num_bars - 1) {
+    if (start < end) {
         var partn_idx = await partition_hoare(start, end);
-        await Promise.all([
-            quick_sort_hoare(start, partn_idx),
-            quick_sort_hoare(partn_idx + 1, end)
-        ]);
+        await quick_sort_hoare(start, partn_idx);
+        await quick_sort_hoare(partn_idx + 1, end);
     }
 }
 
