@@ -1,4 +1,4 @@
-var margin_top_percentage = 0.3;
+var margin_top_percentage = 0.5;
 var num_bars = 200;
 var bar_color = 255;
 var bar_width;
@@ -15,6 +15,42 @@ available_sorts = {
     'quicksort_h': quick_sort_hoare,
     'insertion': insertion_sort,
     'merge': merge_sort
+}
+
+function setup() {
+    frameRate(60);
+    createCanvas(windowWidth, windowHeight);
+    bar_width = windowWidth / num_bars;
+    generate_heights();
+}
+
+function draw() {
+    background(0);
+    draw_bars();
+}
+
+function generate_heights() {
+    bar_heights = [];
+    for (var i = 0; i < num_bars; i++) {
+        bar_heights.push(Math.floor(Math.random() * (windowHeight - (windowHeight * margin_top_percentage))));
+        bar_colors.push(color('white'));
+    }
+}
+
+function draw_bars() {
+    for (var i = 0; i < num_bars; i++) {
+        stroke(color('black'));
+        fill(bar_colors[i]);
+        rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
+    }
+}
+
+function windowResized() {
+    if (!currently_sorting) {
+        bar_width = windowWidth / num_bars;
+        generate_heights();
+        resizeCanvas(windowWidth, windowHeight);
+    }
 }
 
 $(document).ready(function() {
@@ -46,39 +82,3 @@ $(document).ready(function() {
     });
 
 });
-
-function setup() {
-    frameRate(60);
-    createCanvas(windowWidth, windowHeight);
-    bar_width = windowWidth / num_bars;
-    generate_heights();
-}
-
-function draw() {
-    background(0);
-    draw_bars();
-}
-
-function generate_heights() {
-    bar_heights = [];
-    for (var i = 0; i < num_bars; i++) {
-        bar_heights.push(Math.floor(Math.random() * ((windowHeight) - (windowHeight * margin_top_percentage))));
-        bar_colors.push(color('white'));
-    }
-}
-
-function draw_bars() {
-    for (var i = 0; i < num_bars; i++) {
-        stroke(color('black'));
-        fill(bar_colors[i]);
-        rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
-    }
-}
-
-function windowResized() {
-    if (!currently_sorting) {
-        bar_width = windowWidth / num_bars;
-        generate_heights();
-        resizeCanvas(windowWidth, windowHeight);
-    }
-}

@@ -4,37 +4,36 @@
 <head>
     <meta charset="utf-8">
     <title>Sorting Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js" integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
     <script type="text/javascript" src="js/sorting_algorithms.js"></script>
     <script type="text/javascript" src="js/sorting_visualizer.js"></script>
 </head>
 
 <body>
-    <div class="row">
-        <div class="col-lg-2">
-            <label for="num-bars-range">Number of bars</label>
-            <input id="num-bars-range" type="range" class="custom-range" value="200" min="50" max="1000">
+    <div id="content" class="p-5">
+        <h1 class="display-4">Sorting Visualizer</h1>
+        <div class="row">
+            <div class="col-sm-6 col-lg-3">
+                <input id="num-bars-range" type="range" class="custom-range mt-1 mb-3" value="100" min="50" max="200">
+                <select class="custom-select" id="sort-select-dropdown">
+                    <option value="bubble" selected>Bubble Sort</option>
+                    <option value="selection">Selection Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                    <option value="quicksort_l">Quick Sort (lomuto)</option>
+                    <option value="quicksort_h">Quick Sort (hoare)</option>
+                    <option value="merge">Merge Sort</option>
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2">
-            <select class="custom-select" id="sort-select-dropdown">
-                <option value="bubble"selected>Bubble Sort</option>
-                <option value="selection">Selection Sort</option>
-                <option value="insertion">Insertion Sort</option>
-                <option value="quicksort_l">Quick Sort (lomuto)</option>
-                <option value="quicksort_h">Quick Sort (hoare)</option>
-                <option value="merge">Merge Sort</option>
-            </select>
-        </div>
-        <button id="start-button" class="btn btn-primary">Start</button>
-        <button id="new-button" class="btn btn-danger">New</button>
-        <button id="reset-button" class="btn btn-warning" disabled>Reset</button>
+        <button id="start-button" class="btn btn-outline-primary mt-3 mr-2">Start</button>
+        <button id="new-button" class="btn btn-outline-danger mt-3 mr-2">New</button>
+        <button id="reset-button" class="btn btn-outline-warning mt-3 mr-2" disabled>Reset</button>
     </div>
 
 </body>
