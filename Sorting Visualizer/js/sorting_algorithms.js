@@ -9,7 +9,7 @@ function swap(x, y) {
 }
 
 function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm) {
-    if (algorithm === 'bubble' || algorithm === 'selection' || algorithm === 'quick_l' || algorithm === 'quick_h') {
+    if (algorithm === 'bubble' || algorithm === 'selection' || algorithm === 'quick_l' || algorithm === 'quick_h' || algorithm === 'merge') {
         for (var i = initial_idx; i < initial_idx + bars_to_fill; i++) {
             if (i < limit_idx) {
                 bar_colors[i] = color;
@@ -85,7 +85,7 @@ async function partition_lomuto(start, end) {
         if (bar_heights[i] <= pivot) {
             apply_colors(i, end, bar_color_width, 'red', 'quick_l');
             await sleep(4);
-            swap(i, partn_idx)
+            swap(i, partn_idx);
             partn_idx++;
             apply_colors(i, end, bar_color_width, 'white', 'quick_l');
         }
@@ -138,25 +138,41 @@ async function quick_sort_hoare(start = 0, end = num_bars - 1) {
     }
 }
 
-function merge_sort(arr = bar_heights) {
-    if (arr.length <= 1) {
-        return arr;
-    }
-    var mid = Math.round((arr.length / 2));
-    var left = arr.slice(0, mid);
-    var right = arr.slice(mid);
-    return merge(merge_sort(left), merge_sort(right));
-}
+// I was finding it difficult to visualize merge sort since it's not an inplace algorithm
+// Since merge sort creates auxiliary arrays, I had to do a bit of searching around
+// I found the answer on StackOverflow, and with a little bit of modifying, I was able to make it work.
+// What's different here is that we write back copies of the array into the original global array.
+// Thank you, Rabbid76.
 
-function merge(left, right) {
-    sorted = [];
-    while (left && left.length > 0 && right && right.length > 0) {
-        if (left[0] <= right[0]) {
-            sorted.push(left.shift());
-        } else {
-            sorted.push(right.shift());
+function merge_sort() {
+    arr_copy = bar_heights.slice();
+    merge_sort_slice(arr_copy, 0, num_bars);
+    return;
+}
+async function merge_sort_slice(arr_copy, start, end) {
+    if (end - start <= 1)
+        return;
+    var mid = Math.round((end + start) / 2);
+    await merge_sort_slice(arr_copy, start, mid);
+    await merge_sort_slice(arr_copy, mid, end);
+    let i = start;
+    let j = mid;
+    while (i < end && j < end) {
+        if (arr_copy[i] > arr_copy[j]) {
+            let t = arr_copy[j];
+            apply_colors(i, end, bar_color_width, 'red', 'merge');
+            apply_colors(j, end, bar_color_width, 'red', 'merge');
+            arr_copy.splice(j, 1);
+            arr_copy.splice(i, 0, t);
+            await sleep(20);
+            apply_colors(i, end, bar_color_width, 'white', 'merge');
+            apply_colors(j, end, bar_color_width, 'white', 'merge');
+            j++;
         }
+        i++;
+        if (i == j)
+            j++;
+        // copy back the current state of the sorting
+        bar_heights = arr_copy.slice();
     }
-    bar_heights = sorted.concat(left, right);
-    return bar_heights;
 }
