@@ -23,10 +23,16 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     bar_width = windowWidth / num_bars;
     generate_heights();
+    draw_bars();
+    noLoop();
 }
 
 function draw() {
     background(0);
+    draw_bars();
+}
+
+function draw_bars() {
     for (let i = 0; i < num_bars; i++) {
         stroke(color('black'));
         fill(bar_colors[i]);
@@ -50,7 +56,9 @@ function redraw_bars(resize = false) {
     if (!currently_sorting) {
         $('#start-button').removeAttr('disabled');
         bar_width = windowWidth / num_bars;
+        loop();
         generate_heights();
+        noLoop();
         if (resize)
             resizeCanvas(windowWidth, windowHeight);
     }
@@ -65,14 +73,14 @@ function initialize() {
         $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown').attr('disabled', true);
         $('#reset-button').removeAttr('disabled');
         currently_sorting = true;
+        loop();
         await available_sorts[selected_sort]();
+        noLoop();
         currently_sorting = false;
         $('#sort-select-dropdown, #new-button, #num-bars-range').removeAttr('disabled');
     });
 
-    $('#new-button').on('click', () => {
-        redraw_bars();
-    })
+    $('#new-button').on('click', () => redraw_bars());
 
     $('#num-bars-range').on('input', function() {
         num_bars = $(this).val();
@@ -80,8 +88,8 @@ function initialize() {
     });
 
     $('#sort-select-dropdown').on('change', function() {
-        selected_sort = $(this).val();
-    })
+        selected_sort = $(this).val()
+    });
 
     $('#reset-button').on('click', () => window.location.reload());
 }
