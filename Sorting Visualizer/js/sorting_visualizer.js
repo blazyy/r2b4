@@ -27,7 +27,11 @@ function setup() {
 
 function draw() {
     background(0);
-    draw_bars();
+    for (let i = 0; i < num_bars; i++) {
+        stroke(color('black'));
+        fill(bar_colors[i]);
+        rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
+    }
 }
 
 function generate_heights() {
@@ -35,14 +39,6 @@ function generate_heights() {
     for (let i = 0; i < num_bars; i++) {
         bar_heights.push(Math.floor(Math.random() * (windowHeight - (windowHeight * margin_top_percentage))));
         bar_colors.push(color('white'));
-    }
-}
-
-function draw_bars() {
-    for (let i = 0; i < num_bars; i++) {
-        stroke(color('black'));
-        fill(bar_colors[i]);
-        rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
     }
 }
 
@@ -66,7 +62,7 @@ function initialize() {
         $('#sort-select-dropdown, #new-button, #num-bars-range').removeAttr('disabled');
     });
 
-    $('#new-button').on('click', function() {
+    $('#new-button').on('click', () => {
         generate_heights();
         $('#start-button').removeAttr('disabled');
     })
