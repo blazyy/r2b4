@@ -1,6 +1,5 @@
 const margin_top_percentage = 0.5;
 const bar_color = 255;
-const bar_heights = [];
 const bar_colors = [];
 const available_sorts = {
     'bubble': bubble_sort,
@@ -17,6 +16,7 @@ let bar_color_width = 2;
 let currently_sorting = false;
 let stopped = false;
 let selected_sort = 'bubble';
+let bar_heights = []; // Didn't make this const since merge sort needs the array to be reassignable
 
 function setup() {
     frameRate(60);
@@ -43,10 +43,16 @@ function generate_heights() {
 }
 
 function windowResized() {
+    redraw_bars(resize = true);
+}
+
+function redraw_bars(resize = false) {
     if (!currently_sorting) {
+        $('#start-button').removeAttr('disabled');
         bar_width = windowWidth / num_bars;
         generate_heights();
-        resizeCanvas(windowWidth, windowHeight);
+        if (resize)
+            resizeCanvas(windowWidth, windowHeight);
     }
 }
 
@@ -58,24 +64,22 @@ function initialize() {
     $('#start-button').on('click', async function() {
         $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown').attr('disabled', true);
         $('#reset-button').removeAttr('disabled');
+        currently_sorting = true;
         await available_sorts[selected_sort]();
+        currently_sorting = false;
         $('#sort-select-dropdown, #new-button, #num-bars-range').removeAttr('disabled');
     });
 
     $('#new-button').on('click', () => {
-        generate_heights();
-        $('#start-button').removeAttr('disabled');
+        redraw_bars();
     })
 
     $('#num-bars-range').on('input', function() {
-        $('#start-button').removeAttr('disabled');
         num_bars = $(this).val();
-        bar_width = windowWidth / num_bars;
-        generate_heights();
+        redraw_bars();
     });
 
     $('#sort-select-dropdown').on('change', function() {
-        $('#start-button').removeAttr('disabled');
         selected_sort = $(this).val();
     })
 
