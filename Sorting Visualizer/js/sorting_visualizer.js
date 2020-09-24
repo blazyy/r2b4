@@ -54,10 +54,11 @@ function windowResized() {
 }
 
 $(document).ready(function() {
-    $('#start-button').on('click', function() {
-        $('#start-button, #new-button, #num-bars-range').attr('disabled', true);
+    $('#start-button').on('click', async function() {
+        $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown').attr('disabled', true);
         $('#reset-button').removeAttr('disabled');
-        available_sorts[selected_sort]();
+        await available_sorts[selected_sort]();
+        $('#sort-select-dropdown, #new-button, #num-bars-range').removeAttr('disabled');
     });
 
     $('#new-button').on('click', function() {
@@ -80,5 +81,4 @@ $(document).ready(function() {
     $('#reset-button').on('click', function() {
         window.location.reload();
     });
-
 });

@@ -9,17 +9,17 @@ function swap(x, y) {
 }
 
 function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm) {
-    if (algorithm === 'bubble' || algorithm === 'selection' || algorithm === 'quick_l' || algorithm === 'quick_h' || algorithm === 'merge') {
+    if (algorithm === 'insertion') {
+        for (var i = initial_idx; i >= initial_idx - bars_to_fill; i--) {
+            bar_colors[i] = color;
+        }
+    } else {
         for (var i = initial_idx; i < initial_idx + bars_to_fill; i++) {
             if (i < limit_idx) {
                 bar_colors[i] = color;
             } else {
                 break;
             }
-        }
-    } else if (algorithm === 'insertion') {
-        for (var i = initial_idx; i >= initial_idx - bars_to_fill; i--) {
-            bar_colors[i] = color;
         }
     }
 }
@@ -37,11 +37,9 @@ async function bubble_sort() {
             apply_colors(j, num_bars - i, bar_color_width, 'white', 'bubble');
         }
         if (!swapped) {
-            return;
+            break;
         }
     }
-    $('#new-button').removeAttr('disabled');
-    $('#num-bars-range').removeAttr('disabled');
 }
 
 async function selection_sort() {
@@ -57,8 +55,6 @@ async function selection_sort() {
         }
         swap(i, min_idx);
     }
-    $('#new-button').removeAttr('disabled');
-    $('#num-bars-range').removeAttr('disabled');
 }
 
 async function insertion_sort() {
@@ -74,8 +70,6 @@ async function insertion_sort() {
         }
         bar_heights[current] = value;
     }
-    $('#new-button').removeAttr('disabled');
-    $('#num-bars-range').removeAttr('disabled');
 }
 
 async function partition_lomuto(start, end) {
@@ -99,9 +93,6 @@ async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
         var partn_idx = await partition_lomuto(start, end);
         await quick_sort_lomuto(start, partn_idx - 1);
         await quick_sort_lomuto(partn_idx + 1, end);
-    } else {
-        $('#new-button').removeAttr('disabled');
-        $('#num-bars-range').removeAttr('disabled');
     }
 }
 
@@ -144,11 +135,11 @@ async function quick_sort_hoare(start = 0, end = num_bars - 1) {
 // What's different here is that we write back copies of the array into the original global array.
 // Thank you, Rabbid76.
 
-function merge_sort() {
+async function merge_sort() {
     arr_copy = bar_heights.slice();
-    merge_sort_slice(arr_copy, 0, num_bars);
-    return;
+    await merge_sort_slice(arr_copy, 0, num_bars);
 }
+
 async function merge_sort_slice(arr_copy, start, end) {
     if (end - start <= 1)
         return;
