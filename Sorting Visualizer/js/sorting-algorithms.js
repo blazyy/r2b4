@@ -49,7 +49,7 @@ async function selection_sort() {
             apply_colors(j, num_bars, bar_color_width, 'red', 'selection');
             if (bar_heights[j] < bar_heights[min_idx]) {
                 min_idx = j;
-                await sleep(4);
+                await sleep(20);
             }
             apply_colors(j, num_bars, bar_color_width, 'white', 'selection');
         }
@@ -78,7 +78,7 @@ async function partition_lomuto(start, end) {
     for (let i = start; i < end; i++) {
         if (bar_heights[i] <= pivot) {
             apply_colors(i, end, bar_color_width, 'red', 'quick_l');
-            await sleep(4);
+            await sleep(20);
             swap(i, partn_idx);
             partn_idx++;
             apply_colors(i, end, bar_color_width, 'white', 'quick_l');
@@ -114,7 +114,7 @@ async function partition_hoare(start, end) {
         }
         apply_colors(i, end, bar_color_width, 'red', 'quick_h');
         apply_colors(j, end, bar_color_width, 'red', 'quick_h');
-        await sleep(4);
+        await sleep(25);
         apply_colors(i, end, bar_color_width, 'white', 'quick_h');
         apply_colors(j, end, bar_color_width, 'white', 'quick_h');
         swap(i, j);
