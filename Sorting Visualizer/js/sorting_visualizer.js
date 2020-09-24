@@ -1,14 +1,8 @@
-var margin_top_percentage = 0.5;
-var num_bars = 200;
-var bar_color = 255;
-var bar_width;
-var bar_heights = [];
-var bar_colors = [];
-var bar_color_width = 2;
-var currently_sorting = false;
-var stopped = false;
-var selected_sort = 'bubble';
-available_sorts = {
+const margin_top_percentage = 0.5;
+const bar_color = 255;
+const bar_heights = [];
+const bar_colors = [];
+const available_sorts = {
     'bubble': bubble_sort,
     'selection': selection_sort,
     'quicksort_l': quick_sort_lomuto,
@@ -16,6 +10,13 @@ available_sorts = {
     'insertion': insertion_sort,
     'merge': merge_sort
 }
+
+let num_bars = 200;
+let bar_width;
+let bar_color_width = 2;
+let currently_sorting = false;
+let stopped = false;
+let selected_sort = 'bubble';
 
 function setup() {
     frameRate(60);
@@ -30,15 +31,15 @@ function draw() {
 }
 
 function generate_heights() {
-    bar_heights = [];
-    for (var i = 0; i < num_bars; i++) {
+    bar_heights.splice(0, bar_heights.length); // empties array
+    for (let i = 0; i < num_bars; i++) {
         bar_heights.push(Math.floor(Math.random() * (windowHeight - (windowHeight * margin_top_percentage))));
         bar_colors.push(color('white'));
     }
 }
 
 function draw_bars() {
-    for (var i = 0; i < num_bars; i++) {
+    for (let i = 0; i < num_bars; i++) {
         stroke(color('black'));
         fill(bar_colors[i]);
         rect(i * bar_width, height - bar_heights[i], bar_width, bar_heights[i]);
@@ -54,6 +55,10 @@ function windowResized() {
 }
 
 $(document).ready(function() {
+    initialize();
+});
+
+function initialize() {
     $('#start-button').on('click', async function() {
         $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown').attr('disabled', true);
         $('#reset-button').removeAttr('disabled');
@@ -78,7 +83,5 @@ $(document).ready(function() {
         selected_sort = $(this).val();
     })
 
-    $('#reset-button').on('click', function() {
-        window.location.reload();
-    });
-});
+    $('#reset-button').on('click', () => window.location.reload());
+}
