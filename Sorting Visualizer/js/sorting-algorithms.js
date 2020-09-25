@@ -72,6 +72,27 @@ async function insertion_sort() {
     }
 }
 
+async function shell_sort() {
+    let gap = Math.floor(num_bars / 2);
+    while (gap > 0) {
+        for (let i = gap; i < num_bars; i++) {
+            let j = i;
+            let temp = bar_heights[i];
+            while (j >= gap && bar_heights[j - gap] > temp) {
+                apply_colors(j, gap, bar_color_width, 'red', 'insertion');
+                apply_colors(j - gap, gap, bar_color_width, 'red', 'insertion');
+                bar_heights[j] = bar_heights[j - gap];
+                await sleep(4);
+                apply_colors(j, gap, bar_color_width, 'white', 'insertion');
+                apply_colors(j - gap, gap, bar_color_width, 'white', 'insertion');
+                j -= gap;
+            }
+            bar_heights[j] = temp;
+        }
+        gap = Math.floor(gap / 2);
+    }
+}
+
 async function partition_lomuto(start, end) {
     let pivot = bar_heights[end];
     let partn_idx = start;

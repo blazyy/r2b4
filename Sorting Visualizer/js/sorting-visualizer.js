@@ -4,9 +4,10 @@ const bar_colors = [];
 const available_sorts = {
     'bubble': bubble_sort,
     'selection': selection_sort,
+    'insertion': insertion_sort,
+    'shell': shell_sort,
     'quicksort_l': quick_sort_lomuto,
     'quicksort_h': quick_sort_hoare,
-    'insertion': insertion_sort,
     'merge': merge_sort
 }
 
