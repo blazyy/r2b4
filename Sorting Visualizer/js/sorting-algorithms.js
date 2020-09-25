@@ -42,6 +42,25 @@ async function bubble_sort() {
     }
 }
 
+async function cocktail_shaker_sort() {
+    let lower_limit = 0;
+    let upper_limit = num_bars - 1;
+    while (lower_limit < upper_limit) {
+
+        for (let i = lower_limit; i < upper_limit; i++)
+            if (bar_heights[i] > bar_heights[i + 1])
+                swap(i, i + 1);
+        await sleep(50);
+        upper_limit--;
+
+        for (let i = upper_limit; i > lower_limit; i--)
+            if (bar_heights[i] < bar_heights[i - 1])
+                swap(i, i - 1);
+
+        lower_limit++;
+    }
+}
+
 async function selection_sort() {
     for (let i = 0; i < num_bars; i++) {
         let min_idx = i;

@@ -3,6 +3,7 @@ const bar_color = 255;
 const bar_colors = [];
 const available_sorts = {
     'bubble': bubble_sort,
+    'cocktail': cocktail_shaker_sort,
     'selection': selection_sort,
     'insertion': insertion_sort,
     'shell': shell_sort,
