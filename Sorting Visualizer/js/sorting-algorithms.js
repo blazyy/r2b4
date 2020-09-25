@@ -46,22 +46,30 @@ async function cocktail_shaker_sort() {
     let lower_limit = 0;
     let upper_limit = num_bars - 1;
     while (lower_limit < upper_limit) {
+        let swapped_1 = false;
+        let swapped_2 = false;
         for (let i = lower_limit; i < upper_limit; i++) {
-            if (bar_heights[i] > bar_heights[i + 1])
+            if (bar_heights[i] > bar_heights[i + 1]) {
                 swap(i, i + 1);
+                swapped_1 = true;
+            }
             apply_colors(i, num_bars, bar_color_width, 'red', 'bubble');
             await sleep(4);
             apply_colors(i, num_bars, bar_color_width, 'white', 'bubble');
         }
         upper_limit--;
         for (let i = upper_limit; i > lower_limit; i--) {
-            if (bar_heights[i] < bar_heights[i - 1])
+            if (bar_heights[i] < bar_heights[i - 1]) {
                 swap(i, i - 1);
+                swapped_2 = true;
+            }
             apply_colors(i, num_bars, bar_color_width, 'red', 'bubble');
             await sleep(4);
             apply_colors(i, num_bars, bar_color_width, 'white', 'bubble');
         }
         lower_limit++;
+        if (!swapped_1 && !swapped_2)
+            break;
     }
 }
 
