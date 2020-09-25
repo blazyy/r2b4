@@ -53,7 +53,6 @@ async function cocktail_shaker_sort() {
             await sleep(4);
             apply_colors(i, num_bars, bar_color_width, 'white', 'bubble');
         }
-        await sleep(10);
         upper_limit--;
         for (let i = upper_limit; i > lower_limit; i--) {
             if (bar_heights[i] < bar_heights[i - 1])
