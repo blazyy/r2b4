@@ -2,10 +2,20 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function invert_color(bar_color) {
+    let r = (255 - bar_color.levels[0]),
+        g = (255 - bar_color.levels[1]),
+        b = (255 - bar_color.levels[2]);
+    return color(r, g, b);
+}
+
 function swap(x, y) {
-    const temp = bar_heights[x];
+    const temp1 = bar_heights[x];
     bar_heights[x] = bar_heights[y];
-    bar_heights[y] = temp;
+    bar_heights[y] = temp1;
+    const temp2 = bar_colors[x];
+    bar_colors[x] = bar_colors[y];
+    bar_colors[y] = temp2;
 }
 
 function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm) {
@@ -28,13 +38,21 @@ async function bubble_sort() {
     for (let i = 0; i < num_bars; i++) {
         let swapped = false;
         for (let j = 0; j < num_bars - i - 1; j++) {
-            apply_colors(j, num_bars - i, bar_color_width, 'red', 'bubble');
+            if (colored_bars) {
+                apply_colors(j, num_bars - i, 1, invert_color(bar_colors[j]), 'bubble');
+            } else {
+                apply_colors(j, num_bars - i, bar_color_width, 'red', 'bubble');
+            }
             if (bar_heights[j] > bar_heights[j + 1]) {
                 swap(j, j + 1);
                 swapped = true;
             }
             await sleep(4); // 4 ms is the smallest delay possible using setTimeout(). This is a browser limitation.
-            apply_colors(j, num_bars - i, bar_color_width, 'white', 'bubble');
+            if (colored_bars) {
+                apply_colors(j, num_bars - i, 1, bar_colors[j], 'bubble');
+            } else {
+                apply_colors(j, num_bars - i, bar_color_width, 'white', 'bubble');
+            }
         }
         if (!swapped) {
             break;

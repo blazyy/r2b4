@@ -1,30 +1,31 @@
-const margin_top_percentage = 0.5;
-const bar_color = 255;
-const bar_colors = [];
-const available_sorts = {
-    'bubble': bubble_sort,
-    'cocktail': cocktail_shaker_sort,
-    'selection': selection_sort,
-    'insertion': insertion_sort,
-    'shell': shell_sort,
-    'quicksort_l': quick_sort_lomuto,
-    'quicksort_h': quick_sort_hoare,
-    'merge': merge_sort
-}
+const margin_top_percentage = 0.5,
+    bar_color = 255,
+    bar_colors = [],
+    available_sorts = {
+        'bubble': bubble_sort,
+        'cocktail': cocktail_shaker_sort,
+        'selection': selection_sort,
+        'insertion': insertion_sort,
+        'shell': shell_sort,
+        'quicksort_l': quick_sort_lomuto,
+        'quicksort_h': quick_sort_hoare,
+        'merge': merge_sort
+    };
 
-let num_bars = 200;
-let bar_width;
-let bar_color_width = 2;
-let currently_sorting = false;
-let stopped = false;
-let selected_sort = 'bubble';
-let bar_heights = []; // Didn't make this const since merge sort needs the array to be reassignable
+let colored_bars = false,
+    num_bars = 200,
+    bar_width,
+    bar_color_width = 2,
+    currently_sorting = false,
+    stopped = false,
+    selected_sort = 'bubble',
+    bar_heights = []; // Didn't make this const since merge sort needs the array to be reassignabl,
 
 function setup() {
     frameRate(60);
     createCanvas(windowWidth, windowHeight);
     bar_width = windowWidth / num_bars;
-    generate_heights();
+    generate_heights_and_color_in();
     draw_bars();
     noLoop();
 }
@@ -42,12 +43,32 @@ function draw_bars() {
     }
 }
 
-function generate_heights() {
-    bar_heights.splice(0, bar_heights.length); // empties array
+function generate_heights_and_color_in() {
+    bar_heights.splice(0, bar_heights.length);
     for (let i = 0; i < num_bars; i++) {
         bar_heights.push(Math.floor(Math.random() * (windowHeight - (windowHeight * margin_top_percentage))));
-        bar_colors.push(color('white'));
     }
+    set_bar_colors();
+}
+
+function set_bar_colors() {
+    bar_colors.splice(0, bar_colors.length); // empties array
+    if (colored_bars) {
+        let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
+        for (let i = 0; i < num_bars; i++) {
+            let new_color = rainbow(bar_heights[i]);
+            let r = Math.floor(new_color._rgb[0]),
+                g = Math.floor(new_color._rgb[1]),
+                b = Math.floor(new_color._rgb[2]);
+            bar_colors.push(color(r, g, b));
+        }
+    } else {
+        for (let i = 0; i < num_bars; i++) {
+            bar_colors.push(color('white'));
+        }
+    }
+    loop();
+    noLoop();
 }
 
 function windowResized() {
@@ -58,9 +79,7 @@ function redraw_bars(resize = false) {
     if (!currently_sorting) {
         $('#start-button').removeAttr('disabled');
         bar_width = windowWidth / num_bars;
-        loop();
-        generate_heights();
-        noLoop();
+        generate_heights_and_color_in();
         if (resize)
             resizeCanvas(windowWidth, windowHeight);
     }
@@ -71,19 +90,6 @@ $(document).ready(function() {
 });
 
 function initialize() {
-    $('#start-button').on('click', async function() {
-        $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown').attr('disabled', true);
-        $('#reset-button').removeAttr('disabled');
-        currently_sorting = true;
-        loop();
-        await available_sorts[selected_sort]();
-        noLoop();
-        currently_sorting = false;
-        $('#sort-select-dropdown, #new-button, #num-bars-range').removeAttr('disabled');
-    });
-
-    $('#new-button').on('click', () => redraw_bars());
-
     $('#num-bars-range').on('input', function() {
         num_bars = $(this).val();
         redraw_bars();
@@ -92,6 +98,28 @@ function initialize() {
     $('#sort-select-dropdown').on('change', function() {
         selected_sort = $(this).val()
     });
+
+    $('#color-toggle-switch').on('change', function() {
+        if ($(this).is(':checked')) {
+            colored_bars = true;
+        } else {
+            colored_bars = false;
+        }
+        set_bar_colors();
+    });
+
+    $('#start-button').on('click', async function() {
+        $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown, #color-toggle-switch').attr('disabled', true);
+        $('#reset-button').removeAttr('disabled');
+        currently_sorting = true;
+        loop();
+        await available_sorts[selected_sort]();
+        noLoop();
+        currently_sorting = false;
+        $('#sort-select-dropdown, #new-button, #num-bars-range, #color-toggle-switch').removeAttr('disabled');
+    });
+
+    $('#new-button').on('click', () => redraw_bars());
 
     $('#reset-button').on('click', () => window.location.reload());
 }
