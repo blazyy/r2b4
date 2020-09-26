@@ -2,13 +2,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function invert_color(bar_color) {
-    let r = (255 - bar_color.levels[0]),
-        g = (255 - bar_color.levels[1]),
-        b = (255 - bar_color.levels[2]);
-    return color(r, g, b);
-}
-
 function swap(x, y) {
     const temp1 = bar_heights[x];
     bar_heights[x] = bar_heights[y];
@@ -19,16 +12,18 @@ function swap(x, y) {
 }
 
 function apply_colors(initial_idx, limit_idx, bars_to_fill, color, algorithm) {
-    if (algorithm === 'insertion') {
-        for (let i = initial_idx; i >= initial_idx - bars_to_fill; i--) {
-            bar_colors[i] = color;
-        }
-    } else {
-        for (let i = initial_idx; i < initial_idx + bars_to_fill; i++) {
-            if (i < limit_idx) {
+    if (!colored_bars) {
+        if (algorithm === 'insertion') {
+            for (let i = initial_idx; i >= initial_idx - bars_to_fill; i--) {
                 bar_colors[i] = color;
-            } else {
-                break;
+            }
+        } else {
+            for (let i = initial_idx; i < initial_idx + bars_to_fill; i++) {
+                if (i < limit_idx) {
+                    bar_colors[i] = color;
+                } else {
+                    break;
+                }
             }
         }
     }
@@ -38,21 +33,13 @@ async function bubble_sort() {
     for (let i = 0; i < num_bars; i++) {
         let swapped = false;
         for (let j = 0; j < num_bars - i - 1; j++) {
-            if (colored_bars) {
-                apply_colors(j, num_bars - i, 1, invert_color(bar_colors[j]), 'bubble');
-            } else {
-                apply_colors(j, num_bars - i, bar_color_width, 'red', 'bubble');
-            }
+            apply_colors(j, num_bars - i, bar_color_width, 'red', 'bubble');
             if (bar_heights[j] > bar_heights[j + 1]) {
                 swap(j, j + 1);
                 swapped = true;
             }
             await sleep(4); // 4 ms is the smallest delay possible using setTimeout(). This is a browser limitation.
-            if (colored_bars) {
-                apply_colors(j, num_bars - i, 1, bar_colors[j], 'bubble');
-            } else {
-                apply_colors(j, num_bars - i, bar_color_width, 'white', 'bubble');
-            }
+            apply_colors(j, num_bars - i, bar_color_width, 'white', 'bubble');
         }
         if (!swapped) {
             break;
@@ -110,14 +97,17 @@ async function insertion_sort() {
     for (let i = 1; i < num_bars; i++) {
         let current = i;
         let value = bar_heights[i];
+        let value_color = bar_colors[i];
         while (current > 0 && bar_heights[current - 1] > value) {
             apply_colors(current, 0, bar_color_width, 'red', 'insertion');
             bar_heights[current] = bar_heights[current - 1];
+            bar_colors[current] = bar_colors[current - 1];
             await sleep(4);
             apply_colors(current, 0, bar_color_width, 'white', 'insertion');
             current--;
         }
         bar_heights[current] = value;
+        bar_colors[current] = value_color;
     }
 }
 
@@ -127,16 +117,19 @@ async function shell_sort() {
         for (let i = gap; i < num_bars; i++) {
             let j = i;
             let temp = bar_heights[i];
+            let temp_color = bar_colors[i];
             while (j >= gap && bar_heights[j - gap] > temp) {
                 apply_colors(j, gap, bar_color_width, 'red', 'insertion');
                 apply_colors(j - gap, gap, bar_color_width, 'red', 'insertion');
                 bar_heights[j] = bar_heights[j - gap];
+                bar_colors[j] = bar_colors[j - gap];
                 await sleep(4);
                 apply_colors(j, gap, bar_color_width, 'white', 'insertion');
                 apply_colors(j - gap, gap, bar_color_width, 'white', 'insertion');
                 j -= gap;
             }
             bar_heights[j] = temp;
+            bar_colors[j] = temp_color;
         }
         gap = Math.floor(gap / 2);
     }
@@ -206,25 +199,30 @@ async function quick_sort_hoare(start = 0, end = num_bars - 1) {
 // Thank you, Rabbid76.
 
 async function merge_sort() {
-    arr_copy = bar_heights.slice();
-    await merge_sort_slice(arr_copy, 0, num_bars);
+    let arr_copy = bar_heights.slice();
+    let color_arr_copy = bar_colors.slice();
+    await merge_sort_slice(arr_copy, color_arr_copy, 0, num_bars);
+    return;
 }
 
-async function merge_sort_slice(arr_copy, start, end) {
+async function merge_sort_slice(arr, color_arr, start, end) {
     if (end - start <= 1)
         return;
     let mid = Math.round((end + start) / 2);
-    await merge_sort_slice(arr_copy, start, mid);
-    await merge_sort_slice(arr_copy, mid, end);
+    await merge_sort_slice(arr, color_arr, start, mid);
+    await merge_sort_slice(arr, color_arr, mid, end);
     let i = start;
     let j = mid;
     while (i < end && j < end) {
-        if (arr_copy[i] > arr_copy[j]) {
-            let t = arr_copy[j];
+        if (arr[i] > arr[j]) {
+            let t1 = arr[j];
+            let t2 = color_arr[j];
             apply_colors(i, end, bar_color_width, 'red', 'merge');
             apply_colors(j, end, bar_color_width, 'red', 'merge');
-            arr_copy.splice(j, 1);
-            arr_copy.splice(i, 0, t);
+            arr.splice(j, 1);
+            color_arr.splice(j, 1);
+            arr.splice(i, 0, t1);
+            color_arr.splice(i, 0, t2);
             await sleep(20);
             apply_colors(i, end, bar_color_width, 'white', 'merge');
             apply_colors(j, end, bar_color_width, 'white', 'merge');
@@ -234,6 +232,7 @@ async function merge_sort_slice(arr_copy, start, end) {
         if (i == j)
             j++;
         // copy back the current state of the sorting
-        bar_heights = arr_copy.slice();
+        bar_heights = arr.slice();
+        bar_colors = color_arr.slice();
     }
 }

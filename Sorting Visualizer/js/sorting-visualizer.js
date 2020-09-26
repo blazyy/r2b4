@@ -1,6 +1,5 @@
 const margin_top_percentage = 0.5,
     bar_color = 255,
-    bar_colors = [],
     available_sorts = {
         'bubble': bubble_sort,
         'cocktail': cocktail_shaker_sort,
@@ -19,7 +18,8 @@ let colored_bars = false,
     currently_sorting = false,
     stopped = false,
     selected_sort = 'bubble',
-    bar_heights = []; // Didn't make this const since merge sort needs the array to be reassignabl,
+    bar_heights = [], // Didn't make this const since merge sort needs the array to be reassignable
+    bar_colors = []; // same
 
 function setup() {
     frameRate(60);
