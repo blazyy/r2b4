@@ -69,8 +69,10 @@ function set_bar_colors() {
         let color_scale;
         if (retrieved_gradients)
             color_scale = chroma.scale(color_gradients[random_color_index].colors).domain([0, Math.max(...bar_heights)]);
-        else
+        else {
             color_scale = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
+            $('#new-colors-button').hide(); // Hides new colors button in case there is something wrong with the github link with the gradients .json file.
+        }
         for (let i = 0; i < num_bars; i++) {
             let new_color = color_scale(bar_heights[i]),
                 r = Math.floor(new_color._rgb[0]),
@@ -115,7 +117,13 @@ function initialize() {
     });
 
     $('#color-toggle-switch').on('change', function() {
-        $('#color-toggle-switch').is(':checked') ? colored_bars = true : colored_bars = false;
+        if ($('#color-toggle-switch').is(':checked')) {
+            colored_bars = true;
+            $('#new-colors-button').removeAttr('disabled');
+        } else {
+            $('#new-colors-button').attr('disabled', true);
+            colored_bars = false;
+        }
         set_bar_colors();
     });
 
