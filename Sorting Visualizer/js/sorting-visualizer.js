@@ -94,10 +94,12 @@ function initialize() {
         redraw_bars();
     });
 
-    $('#sort-select-dropdown').on('change', () => selected_sort = $(this).val());
+    $('#sort-select-dropdown').on('change', function() {
+        selected_sort = $(this).val();
+    });
 
     $('#color-toggle-switch').on('change', function() {
-        $(this).is(':checked') ? colored_bars = true : colored_bars = false;
+        $('#color-toggle-switch').is(':checked') ? colored_bars = true : colored_bars = false;
         set_bar_colors();
     });
 
