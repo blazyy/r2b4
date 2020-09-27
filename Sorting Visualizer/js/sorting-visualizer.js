@@ -55,6 +55,7 @@ function set_bar_colors() {
     bar_colors.splice(0, bar_colors.length); // empties array
     if (colored_bars) {
         let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
+        // let rainbow = chroma.scale(['#fdbb2d', '#b21f1f', '#1a2a6c']).mode('lch').domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
             let new_color = rainbow(bar_heights[i]),
                 r = Math.floor(new_color._rgb[0]),
@@ -119,7 +120,7 @@ function initialize() {
         $('#sort-select-dropdown, #new-button, #num-bars-range, #color-toggle-switch').removeAttr('disabled');
     });
 
-    $('#new-button').on('click', () => redraw_bars());
+    $('#new-button').on('click', () => redraw_bars(resize = true));
 
     $('#reset-button').on('click', () => window.location.reload());
 }
