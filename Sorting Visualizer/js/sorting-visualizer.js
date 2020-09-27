@@ -11,7 +11,7 @@ const margin_top_percentage = 0.5,
         'merge': merge_sort
     };
 
-let colored_bars = false,
+let colored_bars = true,
     num_bars = 150,
     bar_width,
     bar_color_width = 2,
@@ -19,11 +19,13 @@ let colored_bars = false,
     stopped = false,
     selected_sort = 'bubble',
     bar_heights = [], // Didn't make this const since merge sort needs the array to be reassignable
-    bar_colors = []; // same
+    bar_colors = [], // same
+    old_window_width;
 
 function setup() {
     frameRate(60);
     createCanvas(windowWidth, windowHeight);
+    old_window_width = windowWidth;
     bar_width = windowWidth / num_bars;
     generate_heights_and_color_in();
     draw_bars();
@@ -53,7 +55,8 @@ function generate_heights_and_color_in() {
 function set_bar_colors() {
     bar_colors.splice(0, bar_colors.length); // empties array
     if (colored_bars) {
-        let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
+        // let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
+        let rainbow = chroma.scale(['yellow', 'red', 'black']).domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
             let new_color = rainbow(bar_heights[i]),
                 r = Math.floor(new_color._rgb[0]),
@@ -71,6 +74,7 @@ function set_bar_colors() {
 }
 
 function windowResized() {
+    old_window_width = windowWidth;
     redraw_bars(resize = true);
 }
 
