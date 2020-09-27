@@ -135,31 +135,7 @@ async function shell_sort() {
     }
 }
 
-async function partition_lomuto(start, end) {
-    let pivot = bar_heights[end];
-    let partn_idx = start;
-    for (let i = start; i < end; i++) {
-        if (bar_heights[i] <= pivot) {
-            apply_colors(i, end, bar_color_width, 'red', 'quick_l');
-            await sleep(20);
-            swap(i, partn_idx);
-            partn_idx++;
-            apply_colors(i, end, bar_color_width, 'white', 'quick_l');
-        }
-    }
-    swap(partn_idx, end);
-    return partn_idx;
-}
-
-async function quick_sort_lomuto(start = 0, end = num_bars - 1) {
-    if (start < end) {
-        let partn_idx = await partition_lomuto(start, end);
-        await quick_sort_lomuto(start, partn_idx - 1);
-        await quick_sort_lomuto(partn_idx + 1, end);
-    }
-}
-
-async function partition_hoare(start, end) {
+async function partition(start, end) {
     let pivot = bar_heights[start];
     let i = start - 1;
     let j = end + 1;
@@ -184,11 +160,11 @@ async function partition_hoare(start, end) {
     }
 }
 
-async function quick_sort_hoare(start = 0, end = num_bars - 1) {
+async function quick_sort(start = 0, end = num_bars - 1) {
     if (start < end) {
-        let partn_idx = await partition_hoare(start, end);
-        await quick_sort_hoare(start, partn_idx);
-        await quick_sort_hoare(partn_idx + 1, end);
+        let partn_idx = await partition(start, end);
+        await quick_sort(start, partn_idx);
+        await quick_sort(partn_idx + 1, end);
     }
 }
 

@@ -6,8 +6,7 @@ const margin_top_percentage = 0.5,
         'selection': selection_sort,
         'insertion': insertion_sort,
         'shell': shell_sort,
-        'quicksort_l': quick_sort_lomuto,
-        'quicksort_h': quick_sort_hoare,
+        'quicksort': quick_sort,
         'merge': merge_sort
     };
 
@@ -21,7 +20,8 @@ let colored_bars = true,
     bar_heights = [], // Didn't make this const since merge sort needs the array to be reassignable
     bar_colors = [], // same
     color_gradients = [],
-    random_color_index;
+    random_color_index,
+    retrieved_gradients = true;
 
 function setup() {
     frameRate(60);
@@ -31,10 +31,10 @@ function setup() {
         .then(function(response) {
             color_gradients = response.data;
             random_color_index = Math.floor(Math.random() * color_gradients.length + 1);
-            console.log(color_gradients);
         })
         .catch(function(error) {
             console.log(error);
+            retrieved_gradients = false;
         })
         .then(function() {
             generate_heights_and_color_in();
@@ -66,7 +66,11 @@ function generate_heights_and_color_in() {
 function set_bar_colors() {
     bar_colors.splice(0, bar_colors.length); // empties array
     if (colored_bars) {
-        let color_scale = chroma.scale(color_gradients[random_color_index].colors).domain([0, Math.max(...bar_heights)]);
+        let color_scale;
+        if (retrieved_gradients)
+            color_scale = chroma.scale(color_gradients[random_color_index].colors).domain([0, Math.max(...bar_heights)]);
+        else
+            color_scale = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
             let new_color = color_scale(bar_heights[i]),
                 r = Math.floor(new_color._rgb[0]),
@@ -116,17 +120,22 @@ function initialize() {
     });
 
     $('#start-button').on('click', async function() {
-        $('#start-button, #num-bars-range, #new-button, #sort-select-dropdown, #color-toggle-switch').attr('disabled', true);
+        $('#num-bars-range, #color-toggle-switch, #sort-select-dropdown, #start-button, #new-button, #new-colors-button').attr('disabled', true);
         $('#reset-button').removeAttr('disabled');
         currently_sorting = true;
         loop();
         await available_sorts[selected_sort]();
         noLoop();
         currently_sorting = false;
-        $('#sort-select-dropdown, #new-button, #num-bars-range, #color-toggle-switch').removeAttr('disabled');
+        $('#num-bars-range, #color-toggle-switch, #sort-select-dropdown, #new-button, #new-colors-button').removeAttr('disabled');
     });
 
     $('#new-button').on('click', () => redraw_bars(resize = true));
 
     $('#reset-button').on('click', () => window.location.reload());
+
+    $('#new-colors-button').on('click', () => {
+        random_color_index = Math.floor(Math.random() * color_gradients.length + 1);
+        set_bar_colors();
+    });
 }
