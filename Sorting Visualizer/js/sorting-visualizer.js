@@ -20,7 +20,8 @@ let colored_bars = true,
     selected_sort = 'bubble',
     bar_heights = [], // Didn't make this const since merge sort needs the array to be reassignable
     bar_colors = [], // same
-    color_gradients = [];
+    color_gradients = [],
+    random_color_index;
 
 function setup() {
     frameRate(60);
@@ -29,6 +30,7 @@ function setup() {
     axios.get('https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json')
         .then(function(response) {
             color_gradients = response.data;
+            random_color_index = Math.floor(Math.random() * color_gradients.length + 1);
             console.log(color_gradients);
         })
         .catch(function(error) {
@@ -64,7 +66,6 @@ function generate_heights_and_color_in() {
 function set_bar_colors() {
     bar_colors.splice(0, bar_colors.length); // empties array
     if (colored_bars) {
-        let random_color_index = Math.floor(Math.random() * color_gradients.length + 1);
         let color_scale = chroma.scale(color_gradients[random_color_index].colors).domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
             let new_color = color_scale(bar_heights[i]),
