@@ -20,16 +20,25 @@ let colored_bars = true,
     selected_sort = 'bubble',
     bar_heights = [], // Didn't make this const since merge sort needs the array to be reassignable
     bar_colors = [], // same
-    old_window_width;
+    color_gradients = [];
 
 function setup() {
     frameRate(60);
     createCanvas(windowWidth, windowHeight);
-    old_window_width = windowWidth;
     bar_width = windowWidth / num_bars;
-    generate_heights_and_color_in();
-    draw_bars();
-    noLoop();
+    axios.get('https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json')
+        .then(function(response) {
+            color_gradients = response.data;
+            console.log(color_gradients);
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+        .then(function() {
+            generate_heights_and_color_in();
+            draw_bars();
+            noLoop();
+        });
 }
 
 function draw() {
@@ -55,26 +64,24 @@ function generate_heights_and_color_in() {
 function set_bar_colors() {
     bar_colors.splice(0, bar_colors.length); // empties array
     if (colored_bars) {
-        // let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
-        let rainbow = chroma.scale(['yellow', 'red', 'black']).domain([0, Math.max(...bar_heights)]);
+        let random_color_index = Math.floor(Math.random() * color_gradients.length + 1);
+        let color_scale = chroma.scale(color_gradients[random_color_index].colors).domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
-            let new_color = rainbow(bar_heights[i]),
+            let new_color = color_scale(bar_heights[i]),
                 r = Math.floor(new_color._rgb[0]),
                 g = Math.floor(new_color._rgb[1]),
                 b = Math.floor(new_color._rgb[2]);
             bar_colors.push(color(r, g, b));
         }
     } else {
-        for (let i = 0; i < num_bars; i++) {
+        for (let i = 0; i < num_bars; i++)
             bar_colors.push(color('white'));
-        }
     }
     loop();
     noLoop();
 }
 
 function windowResized() {
-    old_window_width = windowWidth;
     redraw_bars(resize = true);
 }
 
