@@ -45,9 +45,8 @@ function draw_bars() {
 
 function generate_heights_and_color_in() {
     bar_heights.splice(0, bar_heights.length);
-    for (let i = 0; i < num_bars; i++) {
+    for (let i = 0; i < num_bars; i++)
         bar_heights.push(Math.floor(Math.random() * (windowHeight - (windowHeight * margin_top_percentage))));
-    }
     set_bar_colors();
 }
 
@@ -55,7 +54,6 @@ function set_bar_colors() {
     bar_colors.splice(0, bar_colors.length); // empties array
     if (colored_bars) {
         let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
-        // let rainbow = chroma.scale(['#fdbb2d', '#b21f1f', '#1a2a6c']).mode('lch').domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
             let new_color = rainbow(bar_heights[i]),
                 r = Math.floor(new_color._rgb[0]),
@@ -96,16 +94,10 @@ function initialize() {
         redraw_bars();
     });
 
-    $('#sort-select-dropdown').on('change', function() {
-        selected_sort = $(this).val()
-    });
+    $('#sort-select-dropdown').on('change', () => selected_sort = $(this).val());
 
     $('#color-toggle-switch').on('change', function() {
-        if ($(this).is(':checked')) {
-            colored_bars = true;
-        } else {
-            colored_bars = false;
-        }
+        $(this).is(':checked') ? colored_bars = true : colored_bars = false;
         set_bar_colors();
     });
 
