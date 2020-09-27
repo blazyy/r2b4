@@ -12,7 +12,7 @@ const margin_top_percentage = 0.5,
     };
 
 let colored_bars = false,
-    num_bars = 200,
+    num_bars = 150,
     bar_width,
     bar_color_width = 2,
     currently_sorting = false,
@@ -56,8 +56,8 @@ function set_bar_colors() {
     if (colored_bars) {
         let rainbow = chroma.scale(['yellow', 'navy']).mode('lch').domain([0, Math.max(...bar_heights)]);
         for (let i = 0; i < num_bars; i++) {
-            let new_color = rainbow(bar_heights[i]);
-            let r = Math.floor(new_color._rgb[0]),
+            let new_color = rainbow(bar_heights[i]),
+                r = Math.floor(new_color._rgb[0]),
                 g = Math.floor(new_color._rgb[1]),
                 b = Math.floor(new_color._rgb[2]);
             bar_colors.push(color(r, g, b));

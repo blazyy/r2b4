@@ -201,7 +201,7 @@ async function quick_sort_hoare(start = 0, end = num_bars - 1) {
 async function merge_sort() {
     let arr_copy = bar_heights.slice();
     let color_arr_copy = bar_colors.slice();
-    await merge_sort_slice(arr_copy, color_arr_copy, 0, num_bars);
+    await merge_sort_slice(arr_copy, color_arr_copy, 0, arr_copy.length);
     return;
 }
 
