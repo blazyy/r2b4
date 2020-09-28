@@ -7,7 +7,8 @@ const margin_top_percentage = 0.4,
         'insertion': insertion_sort,
         'shell': shell_sort,
         'quicksort': quick_sort,
-        'merge': merge_sort
+        'merge': merge_sort,
+        'heap': heap_sort
     };
 
 let colored_bars = true,
