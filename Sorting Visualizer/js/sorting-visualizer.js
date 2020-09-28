@@ -1,4 +1,4 @@
-const margin_top_percentage = 0.5,
+const margin_top_percentage = 0.4,
     bar_color = 255,
     available_sorts = {
         'bubble': bubble_sort,
