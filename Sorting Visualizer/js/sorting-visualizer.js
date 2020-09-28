@@ -136,7 +136,10 @@ function initialize() {
         await available_sorts[selected_sort]();
         noLoop();
         currently_sorting = false;
-        $('#num-bars-range, #color-toggle-switch, #sort-select-dropdown, #new-button, #new-colors-button').removeAttr('disabled');
+        $('#num-bars-range, #color-toggle-switch, #sort-select-dropdown, #new-button').removeAttr('disabled');
+        if (colored_bars) {
+            $('#new-colors-button').removeAttr('disabled');
+        }
     });
 
     $('#new-button').on('click', () => redraw_bars(resize = true));
