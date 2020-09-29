@@ -1,59 +1,48 @@
 #include<iostream>
-#include<cstring>
+#include <bits/stdc++.h>
+#include<string>
 using namespace std;
-class Stack{
-	public:
-		char items[100];
-		int top = 0;
-		void push(char item){
-			items[++top] = item;
-		}
-		char pop(){
-			return items[top--];
-		}
-		char peek(){
-			return items[top];
-		}
-		bool isEmpty(){
-			return (top == 0) ? true : false;
-		}
-};
 
-int precedence(char token){
-	string operators_ = "^*/+-(";
-	string precedences = "433221";
-	for(int i = 0; i < operators_.length(); i++)
-		if(token == operators_[i])
-			return precedences[i];
-	return -1;
+int precedence(char operand){
+    int i;
+    string operands = "^/*+-(";
+    int precedences[] = {4, 3, 3, 2, 2, 1};
+    for(i = 0; i < operands.length(); i++)
+        if(operands[i] == operand)
+            break;
+    return precedences[i];
 }
 
 string infix_to_postfix(string expr){
-	char output_str[100];
-	int output_str_idx = 0;
-	Stack stack;
-	char top;
-	for(int i = 0; i < expr.length(); i++){
-		if(isalpha(expr[i]))
-			output_str[output_str_idx++] = expr[i];
-		else if(expr[i] == '(')
-			stack.push(expr[i]);
-		else if(expr[i] == ')'){
-			top = stack.pop();
-			while(top != '(' && !stack.isEmpty()){
-				output_str[output_str_idx++] = top;
-				top = stack.pop();
-			}
-		}
-		else{
-			while(precedence(stack.peek()) >= precedence(expr[i]) & !stack.isEmpty())
-				output_str[output_str_idx++] = stack.pop();
-			stack.push(expr[i]);
-		}
-	}
-	while(!stack.isEmpty())
-		output_str[output_str_idx++] = stack.pop();
-	return output_str;
+    stack <char> op_stack;
+    string postfix = "";
+    for(int i = 0; i < expr.length(); i++){
+        if(expr[i] == '(')
+            op_stack.push(expr[i]);
+        else if(isalpha(expr[i]))
+            postfix += expr[i];
+        else if(expr[i] == ')'){
+            char top = op_stack.top();
+            op_stack.pop();
+            while(top != '(' && !op_stack.empty()){
+                postfix += top;
+                top = op_stack.top();
+                op_stack.pop();
+            }
+        }
+        else{
+            while(!op_stack.empty() && precedence(op_stack.top()) >= precedence(expr[i])){
+                postfix += op_stack.top();
+                op_stack.pop();
+            }
+            op_stack.push(expr[i]);
+        }
+    }
+    while(!op_stack.empty()){
+        postfix += op_stack.top();
+        op_stack.pop();
+    }
+    return postfix;
 }
 
 int main(void){
