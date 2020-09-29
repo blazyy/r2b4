@@ -4,7 +4,7 @@
 using namespace std;
 
 int precedence(char operand){
-    int i;
+    unsigned long long int i; // doing this just to remove the warning
     string operands = "^/*+-(";
     int precedences[] = {4, 3, 3, 2, 2, 1};
     for(i = 0; i < operands.length(); i++)
@@ -16,7 +16,7 @@ int precedence(char operand){
 string infix_to_postfix(string expr){
     stack <char> op_stack;
     string postfix = "";
-    for(int i = 0; i < expr.length(); i++){
+    for(unsigned long long int i = 0; i < expr.length(); i++){
         if(expr[i] == '(')
             op_stack.push(expr[i]);
         else if(isalpha(expr[i]))
