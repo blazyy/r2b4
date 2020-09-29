@@ -1,34 +1,27 @@
-from binary_tree import BinaryTree
 from stack import Stack
+from binary_tree import BinaryTree
 import operator
 
-
 def build_parse_tree(expr):
-    expr = expr.split(' ')
     tree = BinaryTree()
-    stack = Stack()  # keeps track of parents nodes so we can return to them
-    stack.push(tree)  # this is needed when the expr doesn't start with a '('
-
-    for token in expr:
+    parent_stack = Stack()
+    parent_stack.push(tree) # this is needed when the expr doesn't start with a '('
+    for token in expr.split(' '):
         if token == '(':
-            tree.insert_left('')
-            stack.push(tree)
-            tree = tree.get_left()
-        elif token in '+-/*':
-            tree.set_root(token)
-            tree.insert_right('')
-            stack.push(tree)
-            tree = tree.get_right()
-        elif token == ')':
-            tree = stack.pop()
+            tree.insert_left(' ')
+            parent_stack.push(tree)
+            tree = tree.left
+        elif token in '0123456789':
+            tree.root = token
+            tree = parent_stack.pop()
+        elif token in '^*/+-':
+            tree.root = token
+            parent_stack.push(tree)
+            tree.insert_right(' ')
+            tree = tree.right
         else:
-            try:
-                tree.set_root(int(token))
-                tree = stack.pop()
-            except ValueError:
-                raise ValueError('{} is not a valid integer'.format(token))
+            tree = parent_stack.pop()
     return tree
-
 
 def eval_parse_tree(parse_tree):
     opers = {'+': operator.add,
@@ -36,14 +29,13 @@ def eval_parse_tree(parse_tree):
              '*': operator.mul,
              '/': operator.truediv}
 
-    left_child = parse_tree.get_left()
-    right_child = parse_tree.get_right()
+    left_child = parse_tree.left
+    right_child = parse_tree.right
 
     if left_child and right_child:
-        fn = opers[parse_tree.get_root()]
-        return fn(eval_parse_tree(left_child), eval_parse_tree(right_child))
+        fn = opers[parse_tree.root]
+        return fn(int(eval_parse_tree(left_child)), int(eval_parse_tree(right_child)))
     else:
-        return parse_tree.get_root()
-
+        return parse_tree.root
 
 print(eval_parse_tree(build_parse_tree('( 3 + ( 4 * 5 ) )')))
