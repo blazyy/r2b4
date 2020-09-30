@@ -1,5 +1,5 @@
-#include <iostream>
-#include <vector>
+#include<iostream>
+#include<bits/stdc++.h>
 using namespace std;
 
 class BinaryTree{
@@ -8,99 +8,115 @@ private:
     BinaryTree * left = NULL;
     BinaryTree * right = NULL;
 public:
-    void insert_right(char value){
-        BinaryTree * new_node = new BinaryTree();
-        if(right == NULL)
-            right = new_node;
-        else{
-            new_node -> right = right;
-            right = new_node;
-        }
-    }
-    void insert_left(char value){
-        BinaryTree * new_node = new BinaryTree();
-        if(left == NULL)
+    void insert_left(char data){
+        BinaryTree * new_node = new BinaryTree;
+        new_node -> root = data;
+        if(!left)
             left = new_node;
         else{
             new_node -> left = left;
             left = new_node;
         }
     }
-    BinaryTree * get_right(){
-        return right;
+
+    void insert_right(char data){
+        BinaryTree * new_node = new BinaryTree;
+        new_node -> root = data;
+        if(!right)
+            right = new_node;
+        else{
+            new_node -> right = right;
+            right = new_node;
+        }
     }
+
     BinaryTree * get_left(){
         return left;
     }
-    char get_root(){
-        return root;
+
+    BinaryTree * get_right(){
+        return right;
     }
-    void set_root(char value){
-        root = value;
+
+    void set_root(char token){
+        root = token;
+    }
+
+    char get_root_val(){
+        return root;
     }
 };
 
-bool is_operator(char token){
-    string ops = "+-/*";
-    for(unsigned long long int i = 0; i < ops.length(); i++)
-        if(ops[i] == token)
+bool is_operand(char token){
+    string operands = "0123456789";
+    for(auto operand : operands)
+        if(operand == token)
             return true;
     return false;
 }
 
+bool is_operator(char token){
+    string ops = "^/*+-";
+    for(auto op : ops)
+        if(op == token)
+            return true;
+    return false;
+}
+
+int eval_parse_tree(BinaryTree * parse_tree){
+    BinaryTree * left = (*parse_tree).get_left();
+    BinaryTree * right = (*parse_tree).get_right();
+    if(left && right){
+        char op = (*parse_tree).get_root_val();
+        switch(op){
+            case '+':
+                return eval_parse_tree(left) + eval_parse_tree(right);
+                break;
+            case '-':
+                return eval_parse_tree(left) - eval_parse_tree(right);
+                break;
+            case '/':
+                return eval_parse_tree(left) / eval_parse_tree(right);
+                break;
+            case '*':
+                return eval_parse_tree(left) * eval_parse_tree(right);
+                break;
+        }
+    }
+    else{
+        return int((*parse_tree).get_root_val()) - '0';
+    }
+}
+
 BinaryTree * build_parse_tree(string expr){
-    vector <BinaryTree *> stack;
     BinaryTree * tree = new BinaryTree();
-    stack.push_back(tree);
-    for(long long unsigned int i = 0; i < expr.length(); i++){
-        if(expr[i] == '('){
-            tree -> insert_left(' ');
-            stack.push_back(tree);
-            tree = tree -> get_left();
+    vector <BinaryTree *> parent_stack;
+    parent_stack.push_back(tree);
+    for(auto token : expr){
+        if(token == '('){
+            (*tree).insert_left(' ');
+            parent_stack.push_back(tree);
+            tree = (*tree).get_left();
         }
-        else if(isdigit(expr[i])){
-            tree -> set_root(expr[i]);
-            tree = stack.back(); // In C++, pop_back() returns void
-            stack.pop_back();
+        else if(is_operand(token)){
+            (*tree).set_root(token);
+            tree = parent_stack.back();
+            parent_stack.pop_back();
         }
-        else if(is_operator(expr[i])){
-            tree -> set_root(expr[i]);
-            tree -> insert_right(' ');
-            stack.push_back(tree);
-            tree = tree -> get_right();
+        else if(is_operator(token)){
+            (*tree).set_root(token);
+            (*tree).insert_right(' ');
+            parent_stack.push_back(tree);
+            tree = (*tree).get_right();
         }
         else{
-            tree = stack.back();
-            stack.pop_back();
+            tree = parent_stack.back();
+            parent_stack.pop_back();
         }
     }
     return tree;
 }
 
-int eval_parse_tree(BinaryTree * tree){
-    //cout << "Root: " << tree -> get_root() << endl;
-    char op;
-    int left, right;
-    BinaryTree * left_child = tree -> get_left();
-    BinaryTree * right_child = tree -> get_right();
-    if(left_child && right_child){
-        op = tree -> get_root();
-        left = eval_parse_tree(left_child);
-        right = eval_parse_tree(right_child);
-        switch(op){
-            case '+': return left + right; break;
-            case '-': return left - right; break;
-            case '*': return left * right; break;
-            case '/': return left / right; break;
-        }
-    }
-    else{
-        cout << "Returning " << tree -> get_root() << endl;
-        return tree -> get_root() - '0';
-    }
-    return 1;
-}
-
 int main(void){
-    cout << eval_parse_tree(build_parse_tree("(5+(2*1))")) << endl;
+    cout << eval_parse_tree(build_parse_tree("(5+(6/3))")) << endl;
 }
