@@ -22,6 +22,27 @@ class BinaryTree:
             new_node.right = self.right
             self.right = new_node
 
+    def preorder(self):
+        print(self.root, ' ', end='')
+        if self.left:
+            self.left.preorder()
+        if self.right:
+            self.right.preorder()
+
+    def inorder(self):
+        if self.left:
+            self.left.inorder()
+        print(self.root, ' ', end='')
+        if self.right:
+            self.right.inorder()
+
+    def postorder(self):
+        if self.left:
+            self.left.postorder()
+        if self.right:
+            self.right.postorder()
+        print(self.root, ' ', end='')
+
 
 def preorder(tree):
     if tree is not None:
@@ -42,19 +63,3 @@ def postorder(tree):
         postorder(tree.left)
         postorder(tree.right)
         print(tree.root, ' ', end='')
-
-
-
-# tree = BinaryTree()
-# tree.root = 1
-# tree.insert_left(2)
-# tree.left.insert_left(3)
-# tree.left.insert_right(4)
-# tree.insert_right(5)
-# tree.right.insert_left(6)
-# tree.right.insert_right(7)
-# preorder(tree)
-# print()
-# inorder(tree)
-# print()
-# postorder(tree)
