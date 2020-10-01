@@ -31,7 +31,25 @@ def preorder_iterative(tree):
 
 
 def postorder_iterative(tree):
-    
+    stack = []
+    current = tree
+    while True:
+        while current:
+            if current.right is not None:
+                stack.append(current.right)
+            stack.append(current)
+            current = current.left
+        current = stack.pop()
+        if current.right is not None and stack and stack[-1] == current.right:
+            stack.pop()
+            stack.append(current)
+            current = current.right
+        else:
+            print(current.root, end='  ')
+            current = None
+        if not stack:
+            break
+
 
 tree = BinaryTree()
 tree.root = 1
@@ -53,9 +71,9 @@ tree.preorder()
 print()
 preorder_iterative(tree)
 
-# print()
-# print()
-#
-# tree.postorder()
-# print()
-# postorder_iterative(tree)
+print()
+print()
+
+tree.postorder()
+print()
+postorder_iterative(tree)
