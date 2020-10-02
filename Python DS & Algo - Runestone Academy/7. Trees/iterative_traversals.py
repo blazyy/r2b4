@@ -35,12 +35,12 @@ def postorder_iterative(tree):
     current = tree
     while True:
         while current:
-            if current.right is not None:
+            if current.right:
                 stack.append(current.right)
             stack.append(current)
             current = current.left
         current = stack.pop()
-        if current.right is not None and stack and stack[-1] == current.right:
+        if current.right and stack and stack[-1] == current.right:
             stack.pop()
             stack.append(current)
             current = current.right
