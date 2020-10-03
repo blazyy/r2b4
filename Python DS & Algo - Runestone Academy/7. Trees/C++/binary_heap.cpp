@@ -1,71 +1,91 @@
-#include <iostream>
-#include <vector>
+#include<iostream>
+#include<bits/stdc++.h>
 using namespace std;
 
 class BinaryHeap{
 private:
-    vector <int> heap;
+    vector <int> heap {0};
     int size = 0;
 public:
-    BinaryHeap(){
-        heap.push_back(0);
+    void insert(int item){
+        heap.push_back(item);
+        size++;
+        perc_up(size);
     }
-    bool is_empty(){
-        return (size == 0)? true : false;
-    }
-    void insert(int value){
-        heap.push_back(value);
-        int idx = ++size;
-        while(heap[idx] < heap[idx/2] && idx > 0){
-            swap(heap[idx], heap[idx/2]);
-            idx /= 2;
-        }
-    }
-    int get_size(){
-        return size;
-    }
-    int find_min(){
-        return heap[1];
-    }
-    void perc_down(int idx){
-        int l_idx, r_idx, min_child_idx;
-        while(idx * 2 <= size){
-            // finding smaller child
-            l_idx = idx * 2;
-            r_idx = idx * 2 + 1;
-            if(r_idx > size)
-                min_child_idx = idx*2;
-            else
-                (heap[l_idx] < heap[r_idx]) ? min_child_idx = l_idx : min_child_idx = r_idx;
-            // If parent is bigger, swap with smaller child of the two childs
-            if(heap[idx] > heap[min_child_idx]){
-                swap(heap[idx], heap[min_child_idx]);
-                idx = min_child_idx;
-            }
-            else break;
-        }
+    void perc_up(int idx){
+         while(idx / 2 > 0){
+             int parent_idx = idx / 2;
+             if(heap[idx] < heap[parent_idx]){
+                 swap(heap[idx], heap[parent_idx]);
+                 idx /= 2;
+             }
+             else break;
+         }
     }
     int del_min(){
-        int return_val;
-        return_val = heap[1];
-        heap[1] = heap[size--];
+        int return_num = heap[1];
+        heap[1] = heap[size];
+        size--;
         heap.pop_back();
         perc_down(1);
-        return return_val;
+        return return_num;
     }
-    void build_heap(int * arr, int arr_size){
-        // First, copying array elements to the current heap
-        // Does copying even make sense? Idk. Probably not.
-        for(int i=0; i<arr_size; i++){
-            heap.push_back(arr[i]);
-            size++;
+    void perc_down(int idx){
+        while(idx * 2 <= size){
+            int min_child_idx = find_min_child_idx(idx);
+            if(heap[idx] > heap[min_child_idx])
+                swap(heap[idx], heap[min_child_idx]);
+            idx = min_child_idx;
         }
-        int idx = size/2;
-        for(int i=idx; i>0; i--)
-            perc_down(i);
+    }
+    int find_min_child_idx(int idx){
+        // If no right child, return left child index
+        int return_idx;
+        if(idx * 2 + 1 > size)
+            return_idx = idx * 2;
+        else{
+            if(heap[idx * 2] < heap[idx * 2 + 1])
+                return_idx = idx * 2;
+            else
+                return_idx = idx * 2 + 1;
+        }
+        return return_idx;
+    }
+    void build_heap(vector <int> arr){
+        size = arr.size();
+        for(int i = 0; i < size; i++)
+            heap.push_back(arr[i]);
+        int idx = size / 2;
+        while(idx > 0)
+            perc_down(idx--);
     }
 };
 
+
 int main(void){
-    BinaryHeap bh1;
+    srand(time(NULL));
+    int size = 10;
+    vector <int> arr;
+    BinaryHeap bh;
+
+    // If doing multiple insertion (O (n log n)), use below for loop.
+    // for(int i = 0; i < size; i++){
+    //     int rand_num = rand() % 100;
+    //     arr.push_back(rand_num);
+    //     bh.insert(rand_num);
+    // }
+
+    for(int i = 0; i < size; i++)
+        arr.push_back(rand() % 100);
+
+    bh.build_heap(arr);
+
+    sort(arr.begin(), arr.end());
+    for(int i = 0; i < size; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    for(int i = 0; i < size; i++)
+        cout << bh.del_min() << " ";
+    cout << endl;
 }
