@@ -50,7 +50,7 @@ bool is_unique_3(string str){
 // Solution 4:
 // Using a bit vector (i.e. an int) and bit shifting.
 // Time Complexity: O(n), Space Complexity: O(1).
-// Only works for smallercase A-Z since integer can only hold 32 bits. (Python's int is unbounded but we will assume it can only hold 32 bits)
+// Only works for smallercase A-Z since integer can only hold 32 bits.
 bool is_unique_4(string str){
     int checker = 0;
     for(auto ch : str){
