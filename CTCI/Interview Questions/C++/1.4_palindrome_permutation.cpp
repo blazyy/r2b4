@@ -73,11 +73,4 @@ bool is_palindrome_permutation_3(string str){
 }
 
 int main(void){
-    cout << is_palindrome_permutation_1("taco cat") << endl;
-    cout << is_palindrome_permutation_2("taco cat") << endl;
-    cout << is_palindrome_permutation_3("taco cat") << endl;
-
-    cout << is_palindrome_permutation_1("taco zcat") << endl;
-    cout << is_palindrome_permutation_2("taco zcat") << endl;
-    cout << is_palindrome_permutation_3("taco zcat") << endl;
 }
