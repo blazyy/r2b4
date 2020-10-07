@@ -1,4 +1,5 @@
 # Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
+# Page 60
 
 # Solution 1:
 # Using a hashmap.
@@ -47,6 +48,8 @@ def is_unique_3(string):
 # Time Complexity: O(n), Space Complexity: O(1).
 # Only works for smallercase A-Z since integer can only hold 32 bits. (Python's int is unbounded but we will assume it can only hold 32 bits)
 def is_unique_4(string):
+    if len(string) > 128:
+        return False
     checker = 0
     for ch in string:
         value = ord(ch) - ord('a')
