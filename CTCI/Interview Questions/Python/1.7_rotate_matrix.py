@@ -6,6 +6,8 @@
 # Using an auxiliary array
 # Time Complexity: O(n^2), Space Complexity: O(n^2)
 def rotate_matrix_1(mat):
+    if len(mat) != len(mat[0]):
+        return mat
     n = len(mat)
     rmat = [[None, None, None], [None, None, None], [None, None, None]]
     for i in range(n):
@@ -17,6 +19,8 @@ def rotate_matrix_1(mat):
 # Transpose matrix and rearrange columns inplace
 # Time Complexity: O(n^2), Space Complexity: O(1)
 def rotate_matrix_2(mat):
+    if len(mat) != len(mat[0]):
+        return mat
     n = len(mat)
     # Transpose matrix
     for i in range(n):

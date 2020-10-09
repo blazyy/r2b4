@@ -19,6 +19,7 @@ void print_matrix(int matrix[][n]){
 //   Using an auxiliary array
 //   Time Complexity: O(n^2), Space Complexity: O(n^2)
 void rotate_matrix_1(int mat[][n]){
+    // Not implementing a check to see if the matrix is square since I'm generating the matrix myself but just imagine that the condition exists here. Thx for imagining.
     int rmat[n][n];
     for(int i = 0; i < n; i++)
         for(int j = 0; j < n; j++)
@@ -30,6 +31,7 @@ void rotate_matrix_1(int mat[][n]){
 // Transpose matrix and rearrange columns inplace
 // Time Complexity: O(n^2), Space Complexity: O(1)
 void rotate_matrix_2(int mat[][n]){
+    // Not implementing a check to see if the matrix is square since I'm generating the matrix myself but just imagine that the condition exists here. Thx for imagining.
     for(int i = 0; i < n; i++)
         for(int j = i; j < n; j++)
             if(i != j)
