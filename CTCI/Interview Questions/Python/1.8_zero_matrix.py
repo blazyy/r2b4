@@ -30,7 +30,7 @@ def zero_matrix_1(mat):
 
 # Solution 2
 # Use first column to store columns with zeroes and first row to store rows with zeroes. Preemptively scan first row and column to check if they have zeroes before replacing them.
-
+# Time Complexity: O(n^2), Space Complexity: O(1)
 def zero_matrix_2(mat):
 
     def set_row_to_zero(mat, row_idx, starting_col_idx):
