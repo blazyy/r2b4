@@ -65,23 +65,18 @@ public:
 
 vector <int> create_random_vect(int num_elements){
     vector <int> return_vect;
-    for(int i = 0; i < num_elements + 1; i++)
+    for(int i = 1; i < num_elements + 1; i++)
         return_vect.push_back(rand() % num_elements + 1);
     return return_vect;
 }
 
 // Solution 1
-// Starting from the middle (because that's all we have access to), copy the data from the next node (if it exists) and set it to the node before it.
-// Time Complexity: O(n)
+// Set mid's data to next data, and set mid's next to next's next
+// Time Complexity: O(n), Space Complexity: O(1)
 void delete_middle_node(Node * mid_node){
-    while(mid_node -> next){
-        (*mid_node).set_data((*(mid_node -> next)).get_data());
-            if(mid_node -> next -> next == NULL){
-            (*mid_node).set_next(NULL);
-            break;
-        }
-        mid_node = mid_node -> next;
-    }
+    if(mid_node == NULL || mid_node -> next == NULL) return;
+    mid_node -> data = mid_node -> next -> data;
+    mid_node -> next = mid_node -> next -> next;
 }
 
 
@@ -101,6 +96,5 @@ int main(void){
     }
     cout << "Removing middle node (" << mid_node -> data << ")" << endl;
     delete_middle_node(mid_node);
-
     (*ll).print();
 }

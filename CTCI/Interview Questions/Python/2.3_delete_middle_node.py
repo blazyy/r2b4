@@ -37,15 +37,13 @@ class LinkedList:
         return ' '.join([str(ele) for ele in output_list])
 
 # Solution 1
-# Starting from the middle (because that's all we have access to), copy the data from the next node (if it exists) and set it to the node before it.
+# Set mid's data to next data, and set mid's next to next's next
 # Time Complexity: O(n), Space Complexity: O(1)
 def delete_middle_node(mid_node):
-    while mid_node.next:
-        mid_node.data = mid_node.next.data
-        if mid_node.next.next is None:
-            mid_node.next = None
-            break
-        mid_node = mid_node.next
+    if mid_node is None or mid_node.next is None:
+        return
+    mid_node.data = mid_node.next.data
+    mid_node.next = mid_node.next.next
 
 num_nodes = 10
 ll = LinkedList()
