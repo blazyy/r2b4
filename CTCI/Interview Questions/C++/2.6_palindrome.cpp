@@ -148,6 +148,13 @@ bool compare_linked_lists(LinkedList ll, LinkedList rev_ll){
 // Reversing linked list and check first half of each list
 // Time Complexity: O(n), Space Complexity: O(n)
 bool is_palindrome_2(LinkedList ll){
+    Node * head = ll.get_head();
+    // If string is less than 1 character long
+    if(!head || !head -> next)
+        return true;
+    // If string is two characters long
+    if(head -> data == head -> next -> data && !(head -> next -> next))
+        return true;
     LinkedList rev_ll = reverse_and_clone_ll(ll);
     return compare_linked_lists(ll, rev_ll);
 }
