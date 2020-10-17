@@ -36,5 +36,5 @@ for num in lst:
     stack.push(num)
 print(stack)
 
-for i in range(102):
+for i in range(10):
     print(stack.pop())
