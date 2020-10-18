@@ -6,6 +6,10 @@
 #include <vector>
 using namespace std;
 
+// Solution
+// Nothing to explain here. Pretty simple but kinda long.
+// Time Complexity: O(n) - for pop_at(), due to left_shift(). Other operations are 0(1)
+// Space Complexity - Not relevant.
 class SetOfStacks{
 private:
     int threshold;
@@ -39,6 +43,35 @@ public:
         stacks[current_stack].pop_back();
         return popped;
     }
+
+    void left_shift(int stack, int index){
+        while(stack < current_stack){
+            for(int i = index; i < stacks[stack].size() - 1; i++)
+                stacks[stack][i] = stacks[stack][i + 1];
+            if(stack < current_stack) // This condition deals with shifting the first element of the next stack to the last element of the previous stack.
+                stacks[stack][threshold - 1] = stacks[stack + 1][0];
+            index = 0;
+            stack++;
+        }
+        pop(); // Since we're left shifting, there is a duplicate element at the last, we just remove it using pop.
+    }
+
+    int pop_at(int stack, int index){
+        if(stack > current_stack || stack < 0 || index >= threshold || index < 0){
+            cout << "Invalid stack/element index!" << endl;
+            return -1;
+        }
+        if(stack == current_stack){
+            if(index >= stacks[stack].size()){
+                cout << "Invalid stack/element index!" << endl;
+                return -1;
+            }
+            else if(index == stacks[current_stack].size() - 1) return pop(); // If index to pop is last element, use pop() function.
+        }
+        int popped = stacks[stack][index];
+        left_shift(stack, index);
+        return popped;
+    }
     void print(){
         for(int i = 0; i <= current_stack; i++){
             for(int j = 0; j < threshold; j++)
@@ -69,7 +102,7 @@ int main(void){
     SetOfStacks stack(5);
     for(auto num : rand_vect) stack.push(num);
     print_vector(rand_vect);
-    cout << "Stack before popping: "; stack.print();
-    for(int i = 0; i < 10; i++) cout << stack.pop() << endl;
-    cout << "Stack after popping: "; stack.print();
+    stack.print();
+    cout << "Popping " << stack.pop_at(3, 3) << endl;
+    stack.print();
 }
