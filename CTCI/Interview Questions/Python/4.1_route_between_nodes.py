@@ -93,7 +93,7 @@ pprint.PrettyPrinter().pprint(graph.graph)
 # Solution 1
 print('Path from {} to {}? : {}'.format(node_a.val, node_b.val, is_connected_bfs(node_a, node_b)))
 print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_bfs(node_a, node_f)))
-print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_bfs(node_a, unconnected_node)))
+print('Path from {} to {}? : {}'.format(node_a.val, unconnected_node.val, is_connected_bfs(node_a, unconnected_node)))
 
 # Doing this again because all the nodes have been set to visited by BFS
 node_a = Node('A'); node_b = Node('B'); node_c = Node('C'); node_d = Node('D'); node_e = Node('E'); node_f = Node('F')
@@ -102,4 +102,4 @@ graph = Graph(connections)
 
 print('Path from {} to {}? : {}'.format(node_a.val, node_b.val, is_connected_dfs(node_a, node_b)))
 print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_dfs(node_a, node_f)))
-print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_dfs(node_a, unconnected_node)))
+print('Path from {} to {}? : {}'.format(node_a.val, unconnected_node.val, is_connected_dfs(node_a, unconnected_node)))
