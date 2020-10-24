@@ -42,11 +42,6 @@ class Graph:
                         nearest = node
         return nearest
 
-    # Solution 0
-    # Well, this is the easy way out. But this is probably not what the question was asking me to do.
-    def is_connected(self, node1, node2):
-        return node1 in self.graph[node2]
-
     def __str__(self):
         return '{}({})'.format(self.__class__.__name__, dict(self.graph)) # Casting to dict() just to make output cleaner
 
@@ -55,16 +50,14 @@ class Graph:
 # Time Complexity: O(V + E)
 # Space Complexity: O(V)
 def is_connected_bfs(node1, node2):
-    if node1 == node2:
-        return True
     queue = [node1]
     node1.visited = True
     while len(queue) > 0:
         current = queue.pop(0)
-        if current == node2: # If node2 is found at any point during BFS, return True
-            return True
         for node in graph.get_adjacent_of(current):
             if not node.visited:
+                if node == node2:
+                    return True
                 node.visited = True
                 queue.append(node)
     return False
@@ -85,30 +78,28 @@ def is_connected_dfs(node1, node2):
         if neighbour is None:
             stack.pop()
         else:
-            stack.append(neighbour)
-            neighbour.visited = True
             if neighbour == node2:
                 return True
+            stack.append(neighbour)
+            neighbour.visited = True
     return False
 
 node_a = Node('A'); node_b = Node('B'); node_c = Node('C'); node_d = Node('D'); node_e = Node('E'); node_f = Node('F')
+unconnected_node = Node('X')
 connections = [(node_a, node_b), (node_b, node_c), (node_b, node_d), (node_c, node_d), (node_e, node_f), (node_f, node_c)]
 graph = Graph(connections)
 pprint.PrettyPrinter().pprint(graph.graph)
 
 # Solution 1
-print('Path from {} to {}? : {}'.format(node_a.val, node_b.val, graph.is_connected(node_a, node_b)))
-print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, graph.is_connected(node_a, node_f)))
-
-# Solution 2
 print('Path from {} to {}? : {}'.format(node_a.val, node_b.val, is_connected_bfs(node_a, node_b)))
 print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_bfs(node_a, node_f)))
+print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_bfs(node_a, unconnected_node)))
 
 # Doing this again because all the nodes have been set to visited by BFS
 node_a = Node('A'); node_b = Node('B'); node_c = Node('C'); node_d = Node('D'); node_e = Node('E'); node_f = Node('F')
 connections = [(node_a, node_b), (node_b, node_c), (node_b, node_d), (node_c, node_d), (node_e, node_f), (node_f, node_c)]
 graph = Graph(connections)
 
-# Solution 3
 print('Path from {} to {}? : {}'.format(node_a.val, node_b.val, is_connected_dfs(node_a, node_b)))
 print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_dfs(node_a, node_f)))
+print('Path from {} to {}? : {}'.format(node_a.val, node_f.val, is_connected_dfs(node_a, unconnected_node)))
