@@ -41,15 +41,19 @@ public:
             if(graph[node.first].size() > 0) return true;
         return false;
     }
-    vector <char> build_order(){
+    // Solution 1
+    // Use graph notation, and remove nodes which do not have any dependencies, i.e. incoming nodes.
+    // If all nodes have been dealt with and there are dependencies left, return error.
+    // Time Complexity: O(p + d) where p is the no. of projects, d is the no. of dependencies
+    vector <char> get_build_order(){
         vector <char> build_order = {};
-        vector <char> removed_nodes = {};
-        while(removed_nodes.size() < num_projects){
+        int num_removed = 0;
+        while(num_removed < num_projects){
             for(auto const& node : graph){
-                if(find(removed_nodes.begin(), removed_nodes.end(), node.first) == removed_nodes.end() && node.second.size() == 0){
+                if(find(build_order.begin(), build_order.end(), node.first) == build_order.end() && node.second.size() == 0){
                     build_order.push_back(node.first);
                     remove_node_from_dependencies(node.first);
-                    removed_nodes.push_back(node.first);
+                    num_removed++;
                 }
             }
         }
@@ -75,8 +79,8 @@ int main(void){
     vector <vector <char>> connections = {
         {'a', 'd'}, {'f', 'b'}, {'b', 'd'}, {'f', 'a'}, {'d', 'c'}
     };
-    vector <char> projects = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+    vector <char> projects = {'a', 'b', 'c', 'd', 'e', 'f'};
     Graph graph(connections, projects);
     graph.print();
-    print_vector(graph.build_order());
+    print_vector(graph.get_build_order());
 }
