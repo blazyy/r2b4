@@ -25,7 +25,7 @@ void solution_1(vector <int> &arr) {
 // void solution_2(vector <int> &arr) {
 //     int current_sum, max_sum, start, end;
 //     current_sum = max_sum = arr[0];
-//     for(int i = 1; i < arr.size(); i++) {\
+//     for(int i = 1; i < arr.size(); i++) {
 //         current_sum = max(arr[i], arr[i] + current_sum); // If this doesn't make sense, remember that the array contains negative numbers
 //         max_sum = max(max_sum, current_sum);
 //     }
@@ -37,6 +37,7 @@ void solution_2(vector <int> &arr) {
     // TC - O(n)
     // SC - O(1)
     int current_sum = arr[0], max_sum = arr[0], start = 0, end = 0, max_start = 0, max_end = 0;
+
     for(int i = 1; i < arr.size(); i++) {
         if(arr[i] > arr[i] + current_sum) {
             current_sum = arr[i];
