@@ -43,11 +43,15 @@ vector <int> generate_distinct_random_vector(int size=10, int upper_bound=100) {
     return vect;
 }
 
-
-
 void print_array(vector <int> &arr, bool new_line=true) {
     if(new_line) cout << endl;
     for(auto num : arr)
+        cout << num << " ";
+    cout << endl;
+}
+
+void print_set(set <int> s) {
+    for(auto num : s)
         cout << num << " ";
     cout << endl;
 }
